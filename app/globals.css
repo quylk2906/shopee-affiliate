@@ -1,0 +1,50 @@
+:root {
+  --ink: #101828;
+  --muted: #667085;
+  --emerald: #0b7a5a;
+  --emerald-dark: #086246;
+  --emerald-soft: #e9f8f2;
+  --mint-border: #b9e6d5;
+  --line: #d5dbe3;
+  --surface: #ffffff;
+  --page: #f8fbfa;
+  --danger: #b42318;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  min-width: 320px;
+  background: var(--page);
+}
+body {
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background: var(--page);
+  font-family: var(--font-google-sans);
+  text-rendering: optimizeLegibility;
+}
+button,
+input {
+  font: inherit;
+}
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+::selection {
+  color: #fff;
+  background: var(--emerald);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
+}

@@ -1,0 +1,55 @@
+/* [project]/app/globals.css [app-client] (css) */
+:root {
+  --ink: #101828;
+  --muted: #667085;
+  --emerald: #0b7a5a;
+  --emerald-dark: #086246;
+  --emerald-soft: #e9f8f2;
+  --mint-border: #b9e6d5;
+  --line: #d5dbe3;
+  --surface: #fff;
+  --page: #f8fbfa;
+  --danger: #b42318;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--page);
+  min-width: 320px;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--ink);
+  background: var(--page);
+  text-rendering: optimizelegibility;
+  margin: 0;
+  font-family: Google Sans, Arial, sans-serif;
+}
+
+button, input {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  color: #fff;
+  background: var(--emerald);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, :before, :after {
+    scroll-behavior: auto;
+    transition-duration: .01ms;
+    animation-duration: .01ms;
+    animation-iteration-count: 1;
+  }
+}
+
+/*# sourceMappingURL=app_globals_0yg4wg8.css.map*/

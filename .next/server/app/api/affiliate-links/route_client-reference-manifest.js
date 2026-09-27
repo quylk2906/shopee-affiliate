@@ -1,0 +1,1 @@
+globalThis.__RSC_MANIFEST=(globalThis.__RSC_MANIFEST||{});globalThis.__RSC_MANIFEST["/api/affiliate-links/route"]={"moduleLoading":{"prefix":"/_next/"},"ssrModuleMapping":{},"edgeSSRModuleMapping":{},"clientModules":{},"entryCSSFiles":{"/Users/quincyle/Documents/git-hub/shopee-affiliate/app/api/affiliate-links/route":[]},"rscModuleMapping":{},"edgeRscModuleMapping":{}};

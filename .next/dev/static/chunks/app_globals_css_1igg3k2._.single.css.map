@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 1, "column": 0}, "map": {"version":3,"sources":["turbopack:///[project]/app/globals.css"],"sourcesContent":[":root {\n  --ink: #101828;\n  --muted: #667085;\n  --emerald: #0b7a5a;\n  --emerald-dark: #086246;\n  --emerald-soft: #e9f8f2;\n  --mint-border: #b9e6d5;\n  --line: #d5dbe3;\n  --surface: #ffffff;\n  --page: #f8fbfa;\n  --danger: #b42318;\n}\n\n* {\n  box-sizing: border-box;\n}\nhtml {\n  min-width: 320px;\n  background: var(--page);\n}\nbody {\n  min-height: 100vh;\n  margin: 0;\n  color: var(--ink);\n  background: var(--page);\n  font-family: var(--font-google-sans);\n  text-rendering: optimizeLegibility;\n}\nbutton,\ninput {\n  font: inherit;\n}\nbutton {\n  -webkit-tap-highlight-color: transparent;\n}\n::selection {\n  color: #fff;\n  background: var(--emerald);\n}\n\n@media (prefers-reduced-motion: reduce) {\n  *,\n  *::before,\n  *::after {\n    scroll-behavior: auto;\n    animation-duration: 0.01ms;\n    animation-iteration-count: 1;\n    transition-duration: 0.01ms;\n  }\n}\n"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;AAaA;;;;AAGA;;;;;AAIA;;;;;;;;;AAQA;;;;AAIA;;;;AAGA;;;;;AAKA;EACE"}}]
+}
