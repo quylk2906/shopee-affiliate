@@ -1,5 +1,0 @@
-{
-  "/api/affiliate-links/route": "app/api/affiliate-links/route.js",
-  "/manifest.webmanifest/route": "app/manifest.webmanifest/route.js",
-  "/page": "app/page.js"
-}

@@ -1,8 +1,0 @@
-{
-  "/_not-found/page": "/_not-found",
-  "/_global-error/page": "/_global-error",
-  "/api/affiliate-links/route": "/api/affiliate-links",
-  "/favicon.ico/route": "/favicon.ico",
-  "/manifest.webmanifest/route": "/manifest.webmanifest",
-  "/page": "/"
-}

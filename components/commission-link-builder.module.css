@@ -140,14 +140,24 @@
   color: var(--emerald);
   stroke-width: 1.9;
 }
-.form {
+.formCard {
   padding: 35px 37px 26px;
   background: #fff;
   border: 1px solid #dfe5e3;
   border-radius: 20px;
   box-shadow: 0 16px 40px rgba(16, 24, 40, 0.06);
 }
-.form > label {
+.formBody {
+  display: block;
+  padding: 0;
+}
+.form {
+  display: block;
+}
+.textField {
+  width: 100%;
+}
+.textField label {
   display: block;
   margin-bottom: 14px;
   font-size: 17px;
@@ -168,6 +178,11 @@
 .inputRow:focus-within {
   border-color: var(--emerald);
   box-shadow: 0 0 0 4px rgba(11, 122, 90, 0.12);
+}
+.inputPrefix,
+.inputSuffix {
+  height: 100%;
+  padding: 0;
 }
 .inputIcon {
   flex: 0 0 auto;
@@ -239,7 +254,7 @@
     transform 0.2s,
     box-shadow 0.2s;
 }
-.submitButton:hover:not(:disabled) {
+.submitButton:hover:not(:disabled):not([aria-disabled="true"]) {
   background: var(--emerald-dark);
   box-shadow: 0 10px 22px rgba(11, 122, 90, 0.22);
   transform: translateY(-1px);
@@ -250,7 +265,8 @@
   outline: 3px solid rgba(11, 122, 90, 0.28);
   outline-offset: 3px;
 }
-.submitButton:disabled {
+.submitButton:disabled,
+.submitButton[aria-disabled="true"] {
   cursor: wait;
   opacity: 0.78;
 }
@@ -258,13 +274,10 @@
   width: 24px;
   height: 24px;
 }
-.spinner {
+.loadingSpinner {
   width: 20px;
   height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.45);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
+  color: #fff;
 }
 .formNote {
   margin: 20px 0 0;
@@ -272,25 +285,34 @@
   text-align: center;
   font-size: 14px;
 }
-.formError {
-  min-height: 20px;
-  margin: 7px 0 -8px;
-  color: var(--danger);
-  text-align: center;
+.errorSlot {
+  min-height: 34px;
+}
+.errorAlert {
+  min-height: 0;
+  margin-top: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
   font-size: 14px;
   font-weight: 560;
 }
 .result {
   margin-top: 22px;
   padding: 25px 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
   border: 1px solid var(--mint-border);
   border-radius: 18px;
   background: #f0fbf7;
 }
+.resultContent {
+  min-width: 0;
+  flex: 1;
+}
 .resultTitle {
   display: flex;
   align-items: center;
-  gap: 13px;
   color: var(--emerald);
 }
 .resultTitle > div {
@@ -305,6 +327,7 @@
   color: #667085;
 }
 .checkBadge {
+  flex: 0 0 auto;
   width: 36px;
   height: 36px;
   display: grid;
@@ -325,6 +348,10 @@
   border-radius: 11px;
   background: #fff;
   overflow: hidden;
+}
+.resultSuffix {
+  height: 100%;
+  padding: 0;
 }
 .resultRow input {
   min-width: 0;
@@ -361,7 +388,7 @@
   gap: 14px;
   color: #8893a3;
 }
-.offlineNote > span {
+.offlineLine {
   width: 130px;
   height: 1px;
   background: #d9dfdf;
@@ -374,12 +401,6 @@
   margin: 0;
   font-size: 14px;
 }
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 @media (max-width: 720px) {
   .header {
     height: 76px;
@@ -440,7 +461,7 @@
     width: 29px;
     height: 29px;
   }
-  .form {
+  .formCard {
     padding: 24px 18px 18px;
     border-radius: 17px;
   }
@@ -484,11 +505,15 @@
     font-size: 14px;
   }
   .resultRow button {
+    width: 100%;
     height: 46px;
     margin: 0;
     justify-content: center;
   }
-  .offlineNote > span {
+  .resultSuffix {
+    width: 100%;
+  }
+  .offlineLine {
     width: 44px;
   }
 }
