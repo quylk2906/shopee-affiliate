@@ -45,74 +45,74 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$pwa$2d$registr
 var __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$commission$2d$link$2d$builder$2e$module$2e$css__$5b$app$2d$client$5d$__$28$css__module$29$__ = __turbopack_context__.i("[project]/components/commission-link-builder.module.css [app-client] (css module)");
 ;
 var _s = __turbopack_context__.k.signature();
-"use client";
+'use client';
 ;
 ;
 ;
 ;
 const benefits = [
     {
-        label: "Hoa hồng minh bạch",
+        label: 'Hoa hồng minh bạch',
         Icon: __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$icons$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ShieldIcon"]
     },
     {
-        label: "Không cần cài app",
+        label: 'Không cần cài app',
         Icon: __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$icons$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["BoltIcon"]
     },
     {
-        label: "Miễn phí 100%",
+        label: 'Miễn phí 100%',
         Icon: __TURBOPACK__imported__module__$5b$project$5d2f$components$2f$icons$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["GiftIcon"]
     }
 ];
 function isSupportedUrl(value) {
     try {
         const host = new URL(value).hostname.toLowerCase();
-        return host === "shopee.vn" || host.endsWith(".shopee.vn") || host === "tiktok.com" || host.endsWith(".tiktok.com");
+        return host === 'shopee.vn' || host.endsWith('.shopee.vn') || host === 'tiktok.com' || host.endsWith('.tiktok.com');
     } catch  {
         return false;
     }
 }
 function CommissionLinkBuilder() {
     _s();
-    const [productUrl, setProductUrl] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [productUrl, setProductUrl] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [result, setResult] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
+    const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isCopied, setIsCopied] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     async function pasteFromClipboard() {
-        setError("");
+        setError('');
         try {
             setProductUrl((await navigator.clipboard.readText()).trim());
         } catch  {
-            setError("Trình duyệt chưa cho phép đọc bộ nhớ tạm. Hãy dán link thủ công.");
+            setError('Trình duyệt chưa cho phép đọc bộ nhớ tạm. Hãy dán link thủ công.');
         }
     }
     async function submit(event) {
         event.preventDefault();
-        setError("");
+        setError('');
         setResult(null);
         setIsCopied(false);
         const normalizedUrl = productUrl.trim();
         if (!isSupportedUrl(normalizedUrl)) {
-            setError("Vui lòng nhập link sản phẩm Shopee hoặc TikTok Shop hợp lệ.");
+            setError('Vui lòng nhập link sản phẩm Shopee hoặc TikTok Shop hợp lệ.');
             return;
         }
         setIsLoading(true);
         try {
-            const response = await fetch("/api/affiliate-links", {
-                method: "POST",
+            const response = await fetch('/api/affiliate-links', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json"
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     productUrl: normalizedUrl
                 })
             });
             const data = await response.json();
-            if (!response.ok) throw new Error(data.error || "Không thể tạo link lúc này. Vui lòng thử lại.");
+            if (!response.ok) throw new Error(data.error || 'Không thể tạo link lúc này. Vui lòng thử lại.');
             setResult(data);
         } catch (requestError) {
-            setError(requestError instanceof Error ? requestError.message : "Không thể tạo link lúc này. Vui lòng thử lại.");
+            setError(requestError instanceof Error ? requestError.message : 'Không thể tạo link lúc này. Vui lòng thử lại.');
         } finally{
             setIsLoading(false);
         }
@@ -123,7 +123,7 @@ function CommissionLinkBuilder() {
             await navigator.clipboard.writeText(result.affiliateUrl);
             setIsCopied(true);
         } catch  {
-            setError("Không thể sao chép tự động. Hãy chọn và sao chép link thủ công.");
+            setError('Không thể sao chép tự động. Hãy chọn và sao chép link thủ công.');
         }
     }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -370,7 +370,7 @@ function CommissionLinkBuilder() {
                                 disabled: isLoading,
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        children: isLoading ? "Đang tạo link..." : "Tạo link hoa hồng"
+                                        children: isLoading ? 'Đang tạo link...' : 'Tạo link hoa hồng'
                                     }, void 0, false, {
                                         fileName: "[project]/components/commission-link-builder.tsx",
                                         lineNumber: 183,
@@ -447,7 +447,7 @@ function CommissionLinkBuilder() {
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("small", {
-                                                children: result.provider === "shopee" ? "Shopee" : "TikTok Shop"
+                                                children: result.provider === 'shopee' ? 'Shopee' : 'TikTok Shop'
                                             }, void 0, false, {
                                                 fileName: "[project]/components/commission-link-builder.tsx",
                                                 lineNumber: 202,
@@ -491,7 +491,7 @@ function CommissionLinkBuilder() {
                                                 columnNumber: 45
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                children: isCopied ? "Đã chép" : "Sao chép"
+                                                children: isCopied ? 'Đã chép' : 'Sao chép'
                                             }, void 0, false, {
                                                 fileName: "[project]/components/commission-link-builder.tsx",
                                                 lineNumber: 215,
@@ -559,7 +559,7 @@ function CommissionLinkBuilder() {
         columnNumber: 5
     }, this);
 }
-_s(CommissionLinkBuilder, "nUzZH1C/P4CTR8r+kS15Oz5KdDA=");
+_s(CommissionLinkBuilder, "h2UcM4OSLDk5KXrFJDp1fh9A3Wk=");
 _c = CommissionLinkBuilder;
 var _c;
 __turbopack_context__.k.register(_c, "CommissionLinkBuilder");

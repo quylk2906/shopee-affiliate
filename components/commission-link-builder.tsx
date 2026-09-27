@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { type FormEvent, useState } from "react";
+import { type FormEvent, useState } from 'react';
 import {
   ArrowIcon,
   BoltIcon,
@@ -11,26 +11,26 @@ import {
   LinkIcon,
   ShieldIcon,
   WifiIcon,
-} from "@/components/icons";
-import { PwaRegistration } from "@/components/pwa-registration";
-import styles from "./commission-link-builder.module.css";
+} from '@/components/icons';
+import { PwaRegistration } from '@/components/pwa-registration';
+import styles from './commission-link-builder.module.css';
 
-type GeneratedLink = { affiliateUrl: string; provider: "shopee" | "tiktok" };
+type GeneratedLink = { affiliateUrl: string; provider: 'shopee' | 'tiktok' };
 
 const benefits = [
-  { label: "Hoa hồng minh bạch", Icon: ShieldIcon },
-  { label: "Không cần cài app", Icon: BoltIcon },
-  { label: "Miễn phí 100%", Icon: GiftIcon },
+  { label: 'Hoa hồng minh bạch', Icon: ShieldIcon },
+  { label: 'Không cần cài app', Icon: BoltIcon },
+  { label: 'Miễn phí 100%', Icon: GiftIcon },
 ];
 
 function isSupportedUrl(value: string) {
   try {
     const host = new URL(value).hostname.toLowerCase();
     return (
-      host === "shopee.vn" ||
-      host.endsWith(".shopee.vn") ||
-      host === "tiktok.com" ||
-      host.endsWith(".tiktok.com")
+      host === 'shopee.vn' ||
+      host.endsWith('.shopee.vn') ||
+      host === 'tiktok.com' ||
+      host.endsWith('.tiktok.com')
     );
   } catch {
     return false;
@@ -38,39 +38,39 @@ function isSupportedUrl(value: string) {
 }
 
 export function CommissionLinkBuilder() {
-  const [productUrl, setProductUrl] = useState("");
+  const [productUrl, setProductUrl] = useState('');
   const [result, setResult] = useState<GeneratedLink | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
 
   async function pasteFromClipboard() {
-    setError("");
+    setError('');
     try {
       setProductUrl((await navigator.clipboard.readText()).trim());
     } catch {
       setError(
-        "Trình duyệt chưa cho phép đọc bộ nhớ tạm. Hãy dán link thủ công.",
+        'Trình duyệt chưa cho phép đọc bộ nhớ tạm. Hãy dán link thủ công.',
       );
     }
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setError("");
+    setError('');
     setResult(null);
     setIsCopied(false);
     const normalizedUrl = productUrl.trim();
     if (!isSupportedUrl(normalizedUrl)) {
-      setError("Vui lòng nhập link sản phẩm Shopee hoặc TikTok Shop hợp lệ.");
+      setError('Vui lòng nhập link sản phẩm Shopee hoặc TikTok Shop hợp lệ.');
       return;
     }
 
     setIsLoading(true);
     try {
-      const response = await fetch("/api/affiliate-links", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const response = await fetch('/api/affiliate-links', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productUrl: normalizedUrl }),
       });
       const data = (await response.json()) as GeneratedLink & {
@@ -78,14 +78,14 @@ export function CommissionLinkBuilder() {
       };
       if (!response.ok)
         throw new Error(
-          data.error || "Không thể tạo link lúc này. Vui lòng thử lại.",
+          data.error || 'Không thể tạo link lúc này. Vui lòng thử lại.',
         );
       setResult(data);
     } catch (requestError) {
       setError(
         requestError instanceof Error
           ? requestError.message
-          : "Không thể tạo link lúc này. Vui lòng thử lại.",
+          : 'Không thể tạo link lúc này. Vui lòng thử lại.',
       );
     } finally {
       setIsLoading(false);
@@ -99,7 +99,7 @@ export function CommissionLinkBuilder() {
       setIsCopied(true);
     } catch {
       setError(
-        "Không thể sao chép tự động. Hãy chọn và sao chép link thủ công.",
+        'Không thể sao chép tự động. Hãy chọn và sao chép link thủ công.',
       );
     }
   }
@@ -180,7 +180,7 @@ export function CommissionLinkBuilder() {
             type="submit"
             disabled={isLoading}
           >
-            <span>{isLoading ? "Đang tạo link..." : "Tạo link hoa hồng"}</span>
+            <span>{isLoading ? 'Đang tạo link...' : 'Tạo link hoa hồng'}</span>
             {isLoading ? <span className={styles.spinner} /> : <ArrowIcon />}
           </button>
           <p id="form-note" className={styles.formNote}>
@@ -200,7 +200,7 @@ export function CommissionLinkBuilder() {
               <div>
                 <strong>Link hoa hồng của bạn</strong>
                 <small>
-                  {result.provider === "shopee" ? "Shopee" : "TikTok Shop"}
+                  {result.provider === 'shopee' ? 'Shopee' : 'TikTok Shop'}
                 </small>
               </div>
             </div>
@@ -212,7 +212,7 @@ export function CommissionLinkBuilder() {
               />
               <button type="button" onClick={copyResult}>
                 {isCopied ? <CheckIcon /> : <CopyIcon />}
-                <span>{isCopied ? "Đã chép" : "Sao chép"}</span>
+                <span>{isCopied ? 'Đã chép' : 'Sao chép'}</span>
               </button>
             </div>
           </section>
