@@ -1,4 +1,8 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+@theme {
+  --color-cloud-dancer: #f0eee9;
+}
+
 @custom-variant dark (&:where(.dark, .dark *));

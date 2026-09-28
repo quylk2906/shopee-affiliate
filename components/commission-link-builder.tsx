@@ -122,23 +122,23 @@ export function CommissionLinkBuilder() {
   return (
     <div
       className={
-        isDarkMode ? "dark min-h-dvh bg-slate-950" : "min-h-dvh bg-violet-50/40"
+        isDarkMode ? "dark min-h-dvh bg-slate-950" : "min-h-dvh bg-cloud-dancer"
       }
     >
       <PwaRegistration />
 
-      <header className="h-20 border-slate-200/80 border-b bg-white shadow-xs transition-colors dark:border-slate-800 dark:bg-slate-950 dark:shadow-none motion-reduce:transition-none">
+      <header className="h-20 border-stone-300/70 border-b bg-cloud-dancer/90 shadow-xs transition-colors dark:border-slate-800 dark:bg-slate-950 dark:shadow-none motion-reduce:transition-none">
         <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-5 sm:px-8">
           <HeroLink
             className="flex items-center gap-3 text-violet-700 no-underline dark:text-violet-400"
             href="/"
             aria-label="Lấy Link - Trang chủ"
           >
-            <span className="grid size-10 place-items-center rounded-full bg-violet-700 text-white shadow-sm dark:bg-violet-500">
+            <span className="grid size-10 place-items-center rounded-full bg-violet-700 text-cloud-dancer shadow-sm dark:bg-violet-500">
               <LinkIcon className="size-6 stroke-2" />
             </span>
             <span className="flex flex-col leading-tight">
-              <strong className="text-xl tracking-tight dark:text-slate-50 sm:text-2xl">
+              <strong className="text-xl tracking-tight dark:text-cloud-dancer sm:text-2xl">
                 Lấy Link
               </strong>
               <small className="hidden text-slate-500 text-xs font-medium dark:text-slate-400 sm:block sm:text-sm">
@@ -164,7 +164,7 @@ export function CommissionLinkBuilder() {
             </Chip>
             <Chip
               aria-label="TikTok Shop"
-              className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 font-bold text-slate-950 shadow-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white sm:h-11 sm:px-4"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-stone-300 bg-cloud-dancer px-2.5 font-bold text-slate-950 shadow-xs dark:border-slate-700 dark:bg-slate-900 dark:text-white sm:h-11 sm:px-4"
               size="lg"
               variant="secondary"
             >
@@ -174,7 +174,7 @@ export function CommissionLinkBuilder() {
               <span className="hidden sm:inline">TikTok Shop</span>
             </Chip>
             <Button
-              className="grid size-10 min-w-10 cursor-pointer place-items-center rounded-xl border border-violet-200 bg-violet-50 p-0 text-violet-700 shadow-xs transition-colors hover:bg-violet-100 focus-visible:ring-4 focus-visible:ring-violet-200 dark:border-slate-700 dark:bg-slate-900 dark:text-violet-300 dark:hover:bg-slate-800 dark:focus-visible:ring-violet-500/30 motion-reduce:transition-none sm:size-11"
+              className="grid size-10 min-w-10 cursor-pointer place-items-center rounded-xl border border-stone-300 bg-cloud-dancer p-0 text-violet-700 shadow-xs transition-colors hover:bg-white focus-visible:ring-4 focus-visible:ring-violet-200 dark:border-slate-700 dark:bg-slate-900 dark:text-violet-300 dark:hover:bg-slate-800 dark:focus-visible:ring-violet-500/30 motion-reduce:transition-none sm:size-11"
               type="button"
               variant="secondary"
               aria-label={
@@ -199,7 +199,7 @@ export function CommissionLinkBuilder() {
         <section className="text-center" aria-labelledby="page-title">
           <h1
             id="page-title"
-            className="m-0 font-extrabold text-4xl text-slate-950 tracking-tight dark:text-slate-50 sm:text-5xl lg:text-6xl"
+            className="m-0 font-extrabold text-4xl text-slate-950 tracking-tight dark:text-cloud-dancer sm:text-5xl lg:text-6xl"
           >
             Tạo link{" "}
             <span className="text-violet-700 dark:text-violet-400">
@@ -227,10 +227,10 @@ export function CommissionLinkBuilder() {
         </section>
 
         <Card
-          className="relative overflow-visible rounded-3xl border border-violet-200 border-t-2 border-t-violet-600 bg-white p-5 shadow-xl shadow-violet-950/5 transition-colors dark:border-violet-500/30 dark:border-t-violet-500 dark:bg-slate-900 dark:shadow-black/20 motion-reduce:transition-none sm:p-8"
+          className="relative overflow-visible rounded-3xl border border-stone-300 border-t-2 border-t-violet-600 bg-white/80 p-5 shadow-xl shadow-stone-900/5 transition-colors dark:border-violet-500/30 dark:border-t-violet-500 dark:bg-slate-900 dark:shadow-black/20 motion-reduce:transition-none sm:p-8"
           variant="default"
         >
-          <span className="absolute -top-5 left-6 grid size-10 place-items-center rounded-full border-4 border-violet-50 bg-violet-700 text-white shadow-md dark:border-slate-950 dark:bg-violet-500 sm:left-8">
+          <span className="absolute -top-5 left-6 grid size-10 place-items-center rounded-full border-4 border-cloud-dancer bg-violet-700 text-cloud-dancer shadow-md dark:border-slate-950 dark:bg-violet-500 sm:left-8">
             <LinkIcon className="size-5" />
           </span>
 
@@ -247,7 +247,7 @@ export function CommissionLinkBuilder() {
                 name="productUrl"
                 variant="secondary"
               >
-                <Label className="mb-3 block font-bold text-base text-slate-950 dark:text-slate-50 sm:text-lg">
+                <Label className="mb-3 block font-bold text-base text-slate-950 dark:text-cloud-dancer sm:text-lg">
                   Dán link sản phẩm
                 </Label>
 
@@ -288,7 +288,7 @@ export function CommissionLinkBuilder() {
                   </InputGroup>
 
                   <Button
-                    className="flex h-16 w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border-0 bg-violet-700 px-8 text-lg text-white shadow-lg shadow-violet-900/20 transition-colors hover:bg-violet-800 focus-visible:ring-4 focus-visible:ring-violet-200 disabled:cursor-wait disabled:opacity-75 aria-disabled:cursor-wait aria-disabled:opacity-75 dark:bg-violet-600 dark:hover:bg-violet-500 dark:focus-visible:ring-violet-500/30 motion-reduce:transition-none lg:w-auto"
+                    className="flex h-16 w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border-0 bg-violet-700 px-8 text-lg text-cloud-dancer shadow-lg shadow-violet-900/20 transition-colors hover:bg-violet-800 focus-visible:ring-4 focus-visible:ring-violet-200 disabled:cursor-wait disabled:opacity-75 aria-disabled:cursor-wait aria-disabled:opacity-75 dark:bg-violet-600 dark:hover:bg-violet-500 dark:focus-visible:ring-violet-500/30 motion-reduce:transition-none lg:w-auto"
                     type="submit"
                     size="lg"
                     variant="primary"
@@ -336,7 +336,7 @@ export function CommissionLinkBuilder() {
             role="status"
             aria-live="polite"
           >
-            <Alert.Indicator className="grid size-9 shrink-0 place-items-center rounded-full bg-violet-700 text-white dark:bg-violet-500">
+            <Alert.Indicator className="grid size-9 shrink-0 place-items-center rounded-full bg-violet-700 text-cloud-dancer dark:bg-violet-500">
               <CheckIcon className="size-5" />
             </Alert.Indicator>
             <Alert.Content className="min-w-0 flex-1">
@@ -363,7 +363,7 @@ export function CommissionLinkBuilder() {
                 />
                 <InputGroup.Suffix className="h-full w-full p-0 sm:w-auto">
                   <Button
-                    className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-0 bg-violet-700 px-5 font-bold text-white hover:bg-violet-800 focus-visible:ring-4 focus-visible:ring-violet-200 dark:bg-violet-600 dark:hover:bg-violet-500 dark:focus-visible:ring-violet-500/30 sm:m-1.5 sm:w-auto"
+                    className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-0 bg-violet-700 px-5 font-bold text-cloud-dancer hover:bg-violet-800 focus-visible:ring-4 focus-visible:ring-violet-200 dark:bg-violet-600 dark:hover:bg-violet-500 dark:focus-visible:ring-violet-500/30 sm:m-1.5 sm:w-auto"
                     type="button"
                     variant="primary"
                     onPress={copyResult}
