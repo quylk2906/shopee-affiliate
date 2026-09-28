@@ -3,6 +3,8 @@
 
 @theme {
   --color-cloud-dancer: #f0eee9;
+  --color-primary: #005249;
+  --color-primary-dark: #33746d;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));

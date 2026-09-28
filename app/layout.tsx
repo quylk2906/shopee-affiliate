@@ -31,7 +31,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="vi"
       className={`${googleSans.variable} min-w-80 bg-cloud-dancer`}
     >
-      <body className="min-h-dvh bg-cloud-dancer font-(family-name:--font-google-sans) text-slate-900 antialiased selection:bg-violet-700 selection:text-white">
+      <body className="min-h-dvh bg-cloud-dancer font-(family-name:--font-google-sans) text-slate-900 antialiased selection:bg-primary selection:text-white">
         {children}
       </body>
     </html>

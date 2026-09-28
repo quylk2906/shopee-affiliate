@@ -58,6 +58,21 @@ export function ClipboardIcon(props: IconProps) {
     </IconBase>
   );
 }
+export function ClearIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m6 6 12 12M18 6 6 18" />
+    </IconBase>
+  );
+}
+export function ErrorIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v6M12 17h.01" />
+    </IconBase>
+  );
+}
 export function CopyIcon(props: IconProps) {
   return (
     <IconBase {...props}>
