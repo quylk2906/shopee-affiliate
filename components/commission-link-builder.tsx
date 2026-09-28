@@ -132,12 +132,14 @@ export function CommissionLinkBuilder() {
   return (
     <div
       className={
-        isDarkMode ? 'dark min-h-dvh bg-slate-950' : 'min-h-dvh bg-cloud-dancer'
+        isDarkMode
+          ? 'dark relative isolate min-h-dvh bg-dark-background'
+          : 'relative isolate min-h-dvh bg-cloud-dancer'
       }
     >
       <PwaRegistration />
 
-      <header className="h-20 border-stone-300/70 border-b bg-cloud-dancer/90 shadow-xs transition-colors dark:border-slate-800 dark:bg-slate-950 dark:shadow-none motion-reduce:transition-none">
+      <header className="relative z-10 h-20 border-stone-300/70 border-b bg-cloud-dancer/90 shadow-xs backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-dark-background/90 dark:shadow-black/20 motion-reduce:transition-none">
         <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-5 sm:px-8">
           <HeroLink
             className="flex items-center gap-3 text-primary no-underline dark:text-primary-dark"
@@ -230,7 +232,7 @@ export function CommissionLinkBuilder() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-3 pt-12 pb-8 sm:px-8 sm:pt-16">
+      <main className="relative z-10 mx-auto max-w-6xl px-3 pt-12 pb-8 sm:px-8 sm:pt-16">
         <section className="text-center" aria-labelledby="page-title">
           <h1
             id="page-title"
@@ -262,7 +264,7 @@ export function CommissionLinkBuilder() {
         </section>
 
         <Card
-          className="relative overflow-visible rounded-3xl border border-stone-300 border-t-2 border-t-primary bg-white/80 p-5 shadow-xl shadow-stone-900/5 transition-colors dark:border-primary-dark/40 dark:border-t-primary-dark dark:bg-slate-900 dark:shadow-black/20 motion-reduce:transition-none sm:p-8"
+          className="relative overflow-visible rounded-3xl border border-stone-300 border-t-2 border-t-primary bg-white/80 p-5 shadow-xl shadow-stone-900/5 backdrop-blur-xl transition-colors dark:border-primary-dark/30 dark:border-t-primary-dark dark:bg-slate-900/70 dark:shadow-2xl dark:shadow-black/30 motion-reduce:transition-none sm:p-8"
           variant="default"
         >
           <span className="absolute -top-5 left-6 grid size-10 place-items-center rounded-full border-4 border-cloud-dancer bg-primary text-cloud-dancer shadow-md dark:border-slate-950 dark:bg-primary-dark sm:left-8">
@@ -288,7 +290,7 @@ export function CommissionLinkBuilder() {
 
                 <div className="flex flex-col gap-3 lg:flex-row">
                   <InputGroup
-                    className="relative flex h-16 min-w-0 flex-1 items-center rounded-2xl border border-slate-300 bg-white transition-shadow duration-200 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 dark:border-slate-700 dark:bg-slate-950 dark:focus-within:border-primary-dark dark:focus-within:ring-primary-dark/30 motion-reduce:transition-none"
+                    className="relative flex h-16 min-w-0 flex-1 items-center rounded-2xl border border-slate-300 bg-white transition-shadow duration-200 focus-within:border-primary focus-within:ring-4 focus-within:ring-primary/10 dark:border-white/10 dark:bg-slate-950/70 dark:focus-within:border-primary-dark dark:focus-within:ring-primary-dark/30 motion-reduce:transition-none"
                     fullWidth
                     variant="secondary"
                   >
@@ -360,12 +362,12 @@ export function CommissionLinkBuilder() {
               <div id="form-error" className="min-h-8">
                 {error ? (
                   <Alert
-                    className="mt-3 flex min-h-0 items-start gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-800 shadow-sm dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300"
+                    className="mt-3 flex min-h-0 items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-800 shadow-sm dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300"
                     status="danger"
                     role="alert"
                     aria-live="assertive"
                   >
-                    <Alert.Indicator className="mt-0.5 grid size-8 shrink-0 place-items-center rounded-full bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300">
+                    <Alert.Indicator className="grid size-8 shrink-0 place-items-center rounded-full bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-300">
                       <ErrorIcon className="size-5" />
                     </Alert.Indicator>
                     <Alert.Content className="min-w-0 flex-1">
