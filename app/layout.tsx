@@ -27,8 +27,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="vi" className={`${googleSans.variable} min-w-80 bg-[#f8fbfa]`}>
-      <body className="min-h-screen bg-[#f8fbfa] font-[family-name:var(--font-google-sans)] text-[#101828] antialiased selection:bg-[#0b7a5a] selection:text-white">
+    <html lang="vi" className={`${googleSans.variable} min-w-80 bg-emerald-50`}>
+      <body className="min-h-dvh bg-emerald-50/40 font-(family-name:--font-google-sans) text-slate-900 antialiased selection:bg-emerald-700 selection:text-white">
         {children}
       </body>
     </html>
