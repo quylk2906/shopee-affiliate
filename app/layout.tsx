@@ -21,14 +21,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0b7a5a",
+  themeColor: "#6d28d9",
   colorScheme: "light",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="vi" className={`${googleSans.variable} min-w-80 bg-emerald-50`}>
-      <body className="min-h-dvh bg-emerald-50/40 font-(family-name:--font-google-sans) text-slate-900 antialiased selection:bg-emerald-700 selection:text-white">
+    <html lang="vi" className={`${googleSans.variable} min-w-80 bg-violet-50`}>
+      <body className="min-h-dvh bg-violet-50/40 font-(family-name:--font-google-sans) text-slate-900 antialiased selection:bg-violet-700 selection:text-white">
         {children}
       </body>
     </html>
