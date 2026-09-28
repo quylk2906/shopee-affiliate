@@ -14,7 +14,7 @@ import {
   TextField,
 } from '@heroui/react';
 import Image from 'next/image';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
 import {
   ArrowIcon,
   BoltIcon,
@@ -31,6 +31,10 @@ import {
   WifiIcon,
 } from '@/components/icons';
 import { PwaRegistration } from '@/components/pwa-registration';
+import {
+  THEME_STORAGE_KEY,
+  type ThemePreference,
+} from '@/lib/theme';
 
 type GeneratedLink = { affiliateUrl: string; provider: 'shopee' | 'tiktok' };
 
@@ -61,6 +65,31 @@ export function CommissionLinkBuilder() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    try {
+      const storedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+      const storedDarkMode = storedTheme === 'dark';
+      setIsDarkMode(storedDarkMode);
+      document.documentElement.classList.toggle('dark', storedDarkMode);
+    } catch {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  function toggleTheme() {
+    const nextDarkMode = !isDarkMode;
+    const nextTheme: ThemePreference = nextDarkMode ? 'dark' : 'light';
+
+    setIsDarkMode(nextDarkMode);
+    document.documentElement.classList.toggle('dark', nextDarkMode);
+
+    try {
+      localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    } catch {
+      // The visual toggle still works when storage is unavailable.
+    }
+  }
 
   async function pasteFromClipboard() {
     setError('');
@@ -130,13 +159,7 @@ export function CommissionLinkBuilder() {
   }
 
   return (
-    <div
-      className={
-        isDarkMode
-          ? 'dark relative isolate min-h-dvh bg-dark-background'
-          : 'relative isolate min-h-dvh bg-cloud-dancer'
-      }
-    >
+    <div className="relative isolate min-h-dvh bg-cloud-dancer dark:bg-dark-background">
       <PwaRegistration />
 
       <header className="relative z-10 h-20 border-stone-300/70 border-b bg-cloud-dancer/90 shadow-xs backdrop-blur-xl transition-colors dark:border-white/10 dark:bg-dark-background/90 dark:shadow-black/20 motion-reduce:transition-none">
@@ -220,7 +243,7 @@ export function CommissionLinkBuilder() {
                   : 'Chuyển sang giao diện tối'
               }
               aria-pressed={isDarkMode}
-              onPress={() => setIsDarkMode((currentMode) => !currentMode)}
+              onPress={toggleTheme}
             >
               {isDarkMode ? (
                 <SunIcon className="size-5" />
@@ -264,7 +287,7 @@ export function CommissionLinkBuilder() {
         </section>
 
         <Card
-          className="relative overflow-visible rounded-3xl border border-stone-300 border-t-2 border-t-primary bg-white/80 p-5 shadow-xl shadow-stone-900/5 backdrop-blur-xl transition-colors dark:border-primary-dark/30 dark:border-t-primary-dark dark:bg-slate-900/70 dark:shadow-2xl dark:shadow-black/30 motion-reduce:transition-none sm:p-8"
+          className="relative overflow-visible rounded-3xl border border-stone-300 border-t-2 border-t-primary bg-white/80 p-5 shadow-xl shadow-stone-900/5 backdrop-blur-xl transition-colors dark:border-primary-dark/30 dark:border-t-primary-dark dark:bg-dark-panel dark:shadow-2xl dark:shadow-black/30 motion-reduce:transition-none sm:p-8"
           variant="default"
         >
           <span className="absolute -top-5 left-6 grid size-10 place-items-center rounded-full border-4 border-cloud-dancer bg-primary text-cloud-dancer shadow-md dark:border-slate-950 dark:bg-primary-dark sm:left-8">
