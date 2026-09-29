@@ -9,34 +9,42 @@ import {
   Link as HeroLink,
   InputGroup,
   Label,
-  Separator,
   Spinner,
   TextField,
 } from '@heroui/react';
 import Image from 'next/image';
 import { type FormEvent, useEffect, useState } from 'react';
 import {
+  type AffiliateResult,
+  AffiliateResultCard,
+} from '@/components/affiliate-result-card';
+import {
   ArrowIcon,
   BoltIcon,
-  CheckIcon,
   ClearIcon,
   ClipboardIcon,
-  CopyIcon,
   ErrorIcon,
   GiftIcon,
   LinkIcon,
   MoonIcon,
+  OrderBagIcon,
   ShieldIcon,
   SunIcon,
   WifiIcon,
 } from '@/components/icons';
 import { PwaRegistration } from '@/components/pwa-registration';
-import {
-  THEME_STORAGE_KEY,
-  type ThemePreference,
-} from '@/lib/theme';
+import { THEME_STORAGE_KEY, type ThemePreference } from '@/lib/theme';
 
-type GeneratedLink = { affiliateUrl: string; provider: 'shopee' | 'tiktok' };
+type GeneratedLinkResponse = {
+  affiliateUrl: string;
+  provider: 'shopee' | 'tiktok';
+};
+
+type ProductInsight = {
+  productTitle?: string;
+  commissionRate?: number;
+  estimatedCashback?: number;
+};
 
 const benefits = [
   { label: 'Hoa hồng minh bạch', Icon: ShieldIcon },
@@ -58,12 +66,105 @@ function isSupportedUrl(value: string) {
   }
 }
 
+function productTitleFromUrl(value: string) {
+  try {
+    const { pathname } = new URL(value);
+    const slug = decodeURIComponent(pathname)
+      .replace(/^\/+/, '')
+      .replace(/-i\.\d+\.\d+.*$/, '')
+      .replace(/\/product\/\d+\/\d+.*$/, '')
+      .replace(/[-_]+/g, ' ')
+      .trim();
+    return slug || 'Sản phẩm affiliate';
+  } catch {
+    return 'Sản phẩm affiliate';
+  }
+}
+
+function shopeeItemId(value: string) {
+  try {
+    const url = new URL(value);
+    const pathMatch = url.pathname.match(/(?:-i\.|\/product\/)\d+[./](\d+)/);
+    return pathMatch?.[1] ?? url.searchParams.get('itemid');
+  } catch {
+    return null;
+  }
+}
+
+function finiteNumber(value: unknown) {
+  const parsed =
+    typeof value === 'number'
+      ? value
+      : typeof value === 'string'
+        ? Number(value.replace(/[^0-9.-]/g, ''))
+        : Number.NaN;
+  return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function readProductInsight(payload: unknown): ProductInsight {
+  const queue: unknown[] = [payload];
+  let visited = 0;
+  let title: string | undefined;
+  let price: number | undefined;
+  let rate: number | undefined;
+  let cashback: number | undefined;
+
+  while (queue.length && visited < 200) {
+    const current = queue.shift();
+    visited += 1;
+    if (!current || typeof current !== 'object') continue;
+    if (Array.isArray(current)) {
+      queue.push(...current);
+      continue;
+    }
+
+    const record = current as Record<string, unknown>;
+    const titleValue =
+      record.product_name ??
+      record.item_name ??
+      record.product_title ??
+      record.name;
+    if (!title && typeof titleValue === 'string') title = titleValue;
+
+    price ??= finiteNumber(
+      record.price ??
+        record.price_min ??
+        record.product_price ??
+        record.sale_price,
+    );
+    rate ??= finiteNumber(
+      record.commission_rate ??
+        record.commissionRate ??
+        record.commission_rate_percentage,
+    );
+    cashback ??= finiteNumber(
+      record.estimated_commission ??
+        record.estimated_cashback ??
+        record.estimatedCommission,
+    );
+    queue.push(...Object.values(record));
+  }
+
+  if (rate !== undefined && rate <= 1) rate *= 100;
+  if (price !== undefined && price > 1_000_000_000) price /= 100_000;
+  if (cashback !== undefined && cashback > 1_000_000_000) cashback /= 100_000;
+  if (cashback === undefined && price !== undefined && rate !== undefined) {
+    cashback = (price * rate) / 100;
+  }
+
+  return {
+    productTitle: title,
+    commissionRate: rate,
+    estimatedCashback: cashback,
+  };
+}
+
 export function CommissionLinkBuilder() {
   const [productUrl, setProductUrl] = useState('');
-  const [result, setResult] = useState<GeneratedLink | null>(null);
+  const [result, setResult] = useState<AffiliateResult | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isCopied, setIsCopied] = useState(false);
+  const [isShared, setIsShared] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -106,14 +207,14 @@ export function CommissionLinkBuilder() {
     setProductUrl('');
     setError('');
     setResult(null);
-    setIsCopied(false);
+    setIsShared(false);
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
     setResult(null);
-    setIsCopied(false);
+    setIsShared(false);
     const normalizedUrl = productUrl.trim();
     if (!isSupportedUrl(normalizedUrl)) {
       setError('Vui lòng nhập link sản phẩm Shopee hoặc TikTok Shop hợp lệ.');
@@ -127,14 +228,43 @@ export function CommissionLinkBuilder() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productUrl: normalizedUrl }),
       });
-      const data = (await response.json()) as GeneratedLink & {
+      const data = (await response.json()) as GeneratedLinkResponse & {
         error?: string;
       };
       if (!response.ok)
         throw new Error(
           data.error || 'Không thể tạo link lúc này. Vui lòng thử lại.',
         );
-      setResult(data);
+      const nextResult: AffiliateResult = {
+        ...data,
+        sourceUrl: normalizedUrl,
+        productTitle: productTitleFromUrl(normalizedUrl),
+      };
+      setResult(nextResult);
+
+      if (data.provider === 'shopee') {
+        const itemId = shopeeItemId(normalizedUrl);
+        if (itemId) {
+          fetch(`/api/shopee/product?item_id=${encodeURIComponent(itemId)}`, {
+            cache: 'no-store',
+          })
+            .then(async (productResponse) => {
+              if (!productResponse.ok) return null;
+              return readProductInsight(await productResponse.json());
+            })
+            .then((insight) => {
+              if (!insight) return;
+              setResult((current) =>
+                current?.sourceUrl === normalizedUrl
+                  ? { ...current, ...insight }
+                  : current,
+              );
+            })
+            .catch(() => {
+              // The generated link remains usable when Shopee hides metadata.
+            });
+        }
+      }
     } catch (requestError) {
       setError(
         requestError instanceof Error
@@ -146,15 +276,34 @@ export function CommissionLinkBuilder() {
     }
   }
 
-  async function copyResult() {
+  async function shareResult() {
     if (!result) return;
     try {
-      await navigator.clipboard.writeText(result.affiliateUrl);
-      setIsCopied(true);
-    } catch {
-      setError(
-        'Không thể sao chép tự động. Hãy chọn và sao chép link thủ công.',
-      );
+      if (navigator.share) {
+        await navigator.share({
+          title: result.productTitle,
+          text: 'Mua sản phẩm qua link hoàn tiền này:',
+          url: result.affiliateUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(result.affiliateUrl);
+      }
+      setIsShared(true);
+    } catch (shareError) {
+      if (
+        shareError instanceof DOMException &&
+        shareError.name === 'AbortError'
+      ) {
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(result.affiliateUrl);
+        setIsShared(true);
+      } catch {
+        setError(
+          'Không thể chia sẻ tự động. Hãy mở link và sao chép thủ công.',
+        );
+      }
     }
   }
 
@@ -270,7 +419,7 @@ export function CommissionLinkBuilder() {
             Dán link sản phẩm Shopee hoặc TikTok Shop. Chúng tôi sẽ tạo link
             affiliate sẵn sàng để bạn chia sẻ.
           </p>
-          <ul
+          {/* <ul
             className="mx-auto mt-8 mb-10 grid max-w-3xl list-none gap-4 p-0 sm:grid-cols-3 sm:divide-x sm:divide-slate-200 sm:gap-0 dark:sm:divide-slate-800"
             aria-label="Lợi ích"
           >
@@ -283,11 +432,11 @@ export function CommissionLinkBuilder() {
                 <span>{label}</span>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </section>
 
         <Card
-          className="relative overflow-visible rounded-3xl border border-stone-300 border-t-2 border-t-primary bg-white/80 p-5 shadow-xl shadow-stone-900/5 backdrop-blur-xl transition-colors dark:border-primary-dark/30 dark:border-t-primary-dark dark:bg-dark-panel dark:shadow-2xl dark:shadow-black/30 motion-reduce:transition-none sm:p-8"
+          className="mt-4 relative overflow-visible rounded-3xl border border-stone-300 border-t-2 border-t-primary bg-white/80 p-5 shadow-xl shadow-stone-900/5 backdrop-blur-xl transition-colors dark:border-primary-dark/30 dark:border-t-primary-dark dark:bg-dark-panel dark:shadow-2xl dark:shadow-black/30 motion-reduce:transition-none sm:p-8"
           variant="default"
         >
           <span className="absolute -top-5 left-6 grid size-10 place-items-center rounded-full border-4 border-cloud-dancer bg-primary text-cloud-dancer shadow-md dark:border-slate-950 dark:bg-primary-dark sm:left-8">
@@ -317,9 +466,6 @@ export function CommissionLinkBuilder() {
                     fullWidth
                     variant="secondary"
                   >
-                    <InputGroup.Prefix className="h-full p-0">
-                      <LinkIcon className="ml-4 size-6 shrink-0 text-slate-400 dark:text-slate-500 sm:ml-5" />
-                    </InputGroup.Prefix>
                     <InputGroup.Input
                       className="h-full min-w-0 flex-1 border-0 bg-transparent px-3 text-base text-slate-800 outline-0 placeholder:text-slate-400 dark:text-slate-100 dark:placeholder:text-slate-500 sm:px-4 sm:text-lg"
                       id="product-url"
@@ -357,9 +503,8 @@ export function CommissionLinkBuilder() {
                   </InputGroup>
 
                   <Button
-                    className="flex h-16 w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border-0 bg-primary px-8 text-lg text-cloud-dancer shadow-lg shadow-primary/20 transition-opacity hover:opacity-90 focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-wait disabled:opacity-75 aria-disabled:cursor-wait aria-disabled:opacity-75 dark:bg-primary-dark dark:shadow-primary-dark/20 dark:focus-visible:ring-primary-dark/40 motion-reduce:transition-none lg:w-auto"
+                    className="flex w-full py-5.5 cursor-pointer items-center justify-center gap-3 rounded-2xl border-0 bg-primary text-base text-cloud-dancer shadow-lg shadow-primary/20 transition-opacity hover:opacity-90 focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-wait disabled:opacity-75 aria-disabled:cursor-wait aria-disabled:opacity-75 dark:bg-primary-dark dark:shadow-primary-dark/20 dark:focus-visible:ring-primary-dark/40 motion-reduce:transition-none lg:w-auto"
                     type="submit"
-                    size="lg"
                     variant="primary"
                     isDisabled={isLoading}
                     isPending={isLoading}
@@ -382,8 +527,8 @@ export function CommissionLinkBuilder() {
               >
                 Hỗ trợ liên kết sản phẩm từ Shopee và TikTok Shop
               </p>
-              <div id="form-error" className="min-h-8">
-                {error ? (
+              {error ? (
+                <div id="form-error" className="min-h-8">
                   <Alert
                     className="mt-3 flex min-h-0 items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-800 shadow-sm dark:border-red-500/30 dark:bg-red-500/10 dark:text-red-300"
                     status="danger"
@@ -399,70 +544,26 @@ export function CommissionLinkBuilder() {
                       </Alert.Description>
                     </Alert.Content>
                   </Alert>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
             </Form>
           </Card.Content>
         </Card>
 
         {result ? (
-          <Alert
-            className="mt-5 flex items-start gap-3 rounded-2xl border border-primary/20 bg-primary/5 px-5 py-5 dark:border-primary-dark/40 dark:bg-primary-dark/20 sm:px-8"
-            status="success"
-            role="status"
-            aria-live="polite"
-          >
-            <Alert.Indicator className="grid size-9 shrink-0 place-items-center rounded-full bg-primary text-cloud-dancer dark:bg-primary-dark">
-              <CheckIcon className="size-5" />
-            </Alert.Indicator>
-            <Alert.Content className="min-w-0 flex-1">
-              <div className="flex items-center text-primary dark:text-primary-dark">
-                <div className="flex flex-col gap-0.5">
-                  <strong className="text-base sm:text-lg">
-                    Link hoa hồng của bạn
-                  </strong>
-                  <small className="text-slate-500 dark:text-slate-400">
-                    {result.provider === 'shopee' ? 'Shopee' : 'TikTok Shop'}
-                  </small>
-                </div>
-              </div>
-              <InputGroup
-                className="mt-4 flex h-auto flex-col overflow-hidden rounded-xl border border-slate-300 bg-white p-2 dark:border-slate-700 dark:bg-slate-950 sm:h-15 sm:flex-row sm:p-0"
-                fullWidth
-                variant="secondary"
-              >
-                <InputGroup.Input
-                  className="h-12 min-w-0 flex-1 border-0 bg-transparent px-3 text-slate-700 text-sm outline-0 dark:text-slate-200 sm:h-full sm:px-5 sm:text-base"
-                  readOnly
-                  value={result.affiliateUrl}
-                  aria-label="Link hoa hồng đã tạo"
-                />
-                <InputGroup.Suffix className="h-full w-full p-0 sm:w-auto">
-                  <Button
-                    className="flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-lg border-0 bg-primary px-5 font-bold text-cloud-dancer transition-opacity hover:opacity-90 focus-visible:ring-4 focus-visible:ring-primary/20 dark:bg-primary-dark dark:focus-visible:ring-primary-dark/40 sm:m-1.5 sm:w-auto"
-                    type="button"
-                    variant="primary"
-                    onPress={copyResult}
-                  >
-                    {isCopied ? (
-                      <CheckIcon className="size-5" />
-                    ) : (
-                      <CopyIcon className="size-5" />
-                    )}
-                    <span>{isCopied ? 'Đã chép' : 'Sao chép'}</span>
-                  </Button>
-                </InputGroup.Suffix>
-              </InputGroup>
-            </Alert.Content>
-          </Alert>
+          <AffiliateResultCard
+            result={result}
+            isShared={isShared}
+            onShare={shareResult}
+          />
         ) : null}
 
-        <div className="mt-8 flex items-center justify-center gap-3 text-slate-400 dark:text-slate-500">
+        {/* <div className="mt-8 flex items-center justify-center gap-3 text-slate-400 dark:text-slate-500">
           <Separator className="h-px w-12 bg-slate-200 dark:bg-slate-800 sm:w-32" />
           <WifiIcon className="size-5" />
           <p className="m-0 text-sm">Dùng được khi mất mạng</p>
           <Separator className="h-px w-12 bg-slate-200 dark:bg-slate-800 sm:w-32" />
-        </div>
+        </div> */}
       </main>
     </div>
   );

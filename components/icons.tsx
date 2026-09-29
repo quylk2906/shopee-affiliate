@@ -119,3 +119,78 @@ export function SunIcon(props: IconProps) {
     </IconBase>
   );
 }
+
+export function OrderBagIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M5 8h14l-1 13H6L5 8Z" />
+      <path d="M9 8V6a3 3 0 0 1 6 0v2" />
+      <path d="M9 12c.6 1 1.6 1.5 3 1.5s2.4-.5 3-1.5" />
+    </IconBase>
+  );
+}
+
+export function HistoryIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M3 12a9 9 0 1 0 3-6.7L3 8" />
+      <path d="M3 3v5h5M12 7v5l3 2" />
+    </IconBase>
+  );
+}
+
+export function CalendarIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <rect x="3" y="5" width="18" height="16" rx="2" />
+      <path d="M16 3v4M8 3v4M3 10h18" />
+    </IconBase>
+  );
+}
+
+export function RefreshIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M20 7v5h-5" />
+      <path d="M4 17v-5h5" />
+      <path d="M6.1 9a7 7 0 0 1 11.5-2.6L20 9M4 15l2.4 2.6A7 7 0 0 0 17.9 15" />
+    </IconBase>
+  );
+}
+
+export function ChevronLeftIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m15 18-6-6 6-6" />
+    </IconBase>
+  );
+}
+
+export function ChevronRightIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="m9 18 6-6-6-6" />
+    </IconBase>
+  );
+}
+
+export function WalletIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <path d="M4 7a3 3 0 0 1 3-3h10v4" />
+      <rect x="3" y="7" width="18" height="13" rx="2" />
+      <path d="M16 12h5v4h-5a2 2 0 0 1 0-4Z" />
+    </IconBase>
+  );
+}
+
+export function ShareIcon(props: IconProps) {
+  return (
+    <IconBase {...props}>
+      <circle cx="18" cy="5" r="2.5" />
+      <circle cx="6" cy="12" r="2.5" />
+      <circle cx="18" cy="19" r="2.5" />
+      <path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5" />
+    </IconBase>
+  );
+}

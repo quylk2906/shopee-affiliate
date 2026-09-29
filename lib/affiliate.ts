@@ -1,3 +1,5 @@
+import { createShopeeCustomLinks } from "@/lib/shopee";
+
 export type AffiliateProvider = "shopee" | "tiktok";
 
 type ProviderConfig = {
@@ -47,7 +49,11 @@ function readAffiliateUrl(payload: unknown): string | null {
     nested?.affiliateUrl ??
     nested?.affiliate_url ??
     nested?.shortLink ??
-    nested?.short_link;
+    nested?.short_link ??
+    (Array.isArray(nested?.batchCustomLink)
+      ? (nested.batchCustomLink[0] as Record<string, unknown> | undefined)
+          ?.shortLink
+      : undefined);
   return typeof candidate === "string" && candidate.startsWith("http")
     ? candidate
     : null;
@@ -60,6 +66,14 @@ export async function createAffiliateLink(
   if (process.env.AFFILIATE_API_MOCK === "true") {
     const encoded = Buffer.from(productUrl).toString("base64url").slice(0, 14);
     return `https://affiliate.local/${provider}/${encoded}`;
+  }
+
+  if (provider === "shopee") {
+    const response = await createShopeeCustomLinks([productUrl]);
+    if (!response.ok) throw new Error("PROVIDER_REQUEST_FAILED");
+    const affiliateUrl = readAffiliateUrl(await response.json());
+    if (!affiliateUrl) throw new Error("PROVIDER_RESPONSE_INVALID");
+    return affiliateUrl;
   }
 
   const config = getProviderConfig(provider);
