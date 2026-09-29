@@ -10,10 +10,12 @@ cp .env.example .env.local
 bun run dev
 ```
 
-Shopee dùng phiên đăng nhập trong `app/api/affiliate-links/env.ts`. Cookie này chỉ
-được đọc ở server và sẽ cần thay khi phiên Shopee hết hạn. TikTok vẫn dùng adapter
-được cấu hình bằng biến môi trường. Để kiểm tra giao diện mà không gọi nhà cung
-cấp, đặt `AFFILIATE_API_MOCK=true`; không dùng chế độ mock trên production.
+Shopee dùng phiên đăng nhập từ khóa `shoppeCookie` trong Vercel Global Config.
+Khi chạy local chưa kết nối Global Config, có thể đặt `SHOPEE_COOKIE` trong
+`.env.local` làm phương án dự phòng. Cookie chỉ được đọc ở server và sẽ cần thay
+khi phiên Shopee hết hạn. TikTok vẫn dùng adapter được cấu hình bằng biến môi
+trường. Để kiểm tra giao diện mà không gọi nhà cung cấp, đặt
+`AFFILIATE_API_MOCK=true`; không dùng chế độ mock trên production.
 
 ## Kết nối API affiliate
 
@@ -28,6 +30,7 @@ Adapter nhận `POST` JSON `{ productUrl, provider }`, cùng các header `X-Affi
 - `POST /api/shopee/custom-link` — body `{ "productUrl": "...", "subIds": ["..."] }` hoặc `{ "links": ["..."], "subIds": ["..."] }`.
 - `GET /api/shopee/product?item_id=...` — dữ liệu một sản phẩm; bỏ `item_id` để gọi danh sách và truyền các filter Shopee qua query string.
 
-Các Route Handler luôn gửi cookie từ server, tắt cache, giới hạn thời gian request
-và không trả cookie về client. Đây là API nội bộ có thể đọc dữ liệu tài khoản;
-không triển khai công khai khi chưa thêm xác thực cho ứng dụng.
+Các Route Handler luôn đọc khóa `shoppeCookie` từ Global Config và gửi cookie từ
+server, tắt cache, giới hạn thời gian request và không trả cookie về client. Đây
+là API nội bộ có thể đọc dữ liệu tài khoản; không triển khai công khai khi chưa
+thêm xác thực cho ứng dụng.
