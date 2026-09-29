@@ -504,7 +504,7 @@ export function CommissionLinkBuilder() {
                   </InputGroup>
 
                   <Button
-                    className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border-0 bg-primary py-5.5 text-base text-cloud-dancer shadow-lg shadow-primary/20 transition-opacity hover:opacity-90 focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-wait disabled:opacity-75 aria-disabled:cursor-wait aria-disabled:opacity-75 dark:bg-[#25f4ee] dark:text-slate-950 dark:shadow-[#25f4ee]/20 dark:focus-visible:ring-[#25f4ee]/40 motion-reduce:transition-none lg:w-auto"
+                    className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-2xl border-0 bg-primary py-5.5 text-base text-cloud-dancer shadow-lg shadow-primary/20 transition-opacity hover:opacity-90 focus-visible:ring-4 focus-visible:ring-primary/20 disabled:cursor-wait disabled:opacity-75 aria-disabled:cursor-wait aria-disabled:opacity-75 dark:bg-primary-dark dark:shadow-primary-dark/20 dark:focus-visible:ring-primary-dark/40 motion-reduce:transition-none lg:w-auto"
                     type="submit"
                     variant="primary"
                     isDisabled={isLoading}
@@ -514,10 +514,7 @@ export function CommissionLinkBuilder() {
                       {isLoading ? 'Đang tạo link...' : 'Tạo link hoa hồng'}
                     </span>
                     {isLoading ? (
-                      <Spinner
-                        className="size-5 text-white dark:text-slate-950"
-                        size="sm"
-                      />
+                      <Spinner className="size-5 text-white" size="sm" />
                     ) : (
                       <ArrowIcon className="size-6" />
                     )}

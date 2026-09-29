@@ -114,7 +114,7 @@ export function AffiliateResultCard({
         className={`mt-2 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl px-3 text-center text-base font-bold text-white no-underline shadow-xl transition hover:-translate-y-0.5 hover:opacity-95 focus-visible:outline-none focus-visible:ring-4 motion-reduce:transform-none sm:gap-3 sm:px-5 sm:text-2xl ${
           result.provider === 'shopee'
             ? 'bg-linear-to-r from-orange-600 to-orange-500 shadow-orange-500/20 focus-visible:ring-orange-300'
-            : 'bg-slate-950 shadow-slate-950/20 focus-visible:ring-slate-400 dark:bg-white dark:text-slate-950'
+            : 'bg-slate-950 shadow-slate-950/20 focus-visible:ring-slate-400 dark:bg-[#fe2c55] dark:text-white dark:shadow-[#fe2c55]/20 dark:focus-visible:ring-[#fe2c55]/40'
         }`}
         href={result.affiliateUrl}
         target="_blank"
