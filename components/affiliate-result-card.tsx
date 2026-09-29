@@ -6,7 +6,6 @@ import {
   ShieldIcon,
 } from '@/components/icons';
 import { Link } from '@heroui/react';
-import { mockData } from './mock-data';
 
 export type AffiliateResult = {
   affiliateUrl: string;
