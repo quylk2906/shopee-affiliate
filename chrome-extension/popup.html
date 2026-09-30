@@ -27,6 +27,19 @@
             <strong id="status-text" aria-live="polite">Checking settings…</strong>
           </span>
         </div>
+        <div class="detail-row">
+          <span class="detail-label">Browser expiry</span>
+          <strong id="browser-expiry">Checking cookies…</strong>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Shopee session</span>
+          <span class="session-line">
+            <strong id="session-status">Not checked</strong>
+            <span id="last-checked" hidden>
+              Checked <span id="last-checked-time"></span>
+            </span>
+          </span>
+        </div>
       </section>
 
       <section class="disclosure-note" aria-label="Cookie use disclosure">
@@ -40,6 +53,9 @@
 
       <button id="sync-button" class="primary-button" type="button" disabled>
         Capture &amp; sync
+      </button>
+      <button id="check-button" class="secondary-button" type="button" disabled>
+        Check session
       </button>
       <button id="settings-button" class="secondary-button" type="button">
         Settings

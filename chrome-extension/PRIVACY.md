@@ -19,17 +19,20 @@ own application can make Shopee Affiliate API requests.
 - Shopee authentication cookies for `affiliate.shopee.vn`.
 - The configured Vercel endpoint URL and sync secret.
 - The timestamp of the last successful sync.
+- The timestamp, status, and non-sensitive message from the last session check.
 - The active tab URL, used only to confirm the extension is running on the
   supported Shopee Affiliate website.
 
 ## Use, storage, and sharing
 
-- Cookies are accessed only after the user clicks **Capture & sync**.
+- Cookie metadata is read when the popup opens to show browser-managed expiry.
+- Cookie values are accessed only after the user clicks **Capture & sync** or
+  **Check session**.
 - Cookie values are not displayed or saved in extension storage.
 - Cookies are sent only to the endpoint configured by the user and are used
   only to update the configured Global Config value.
-- The endpoint URL, sync secret, and last-sync timestamp are stored locally in
-  the user's Chrome extension storage.
+- The endpoint URL, sync secret, last-sync timestamp, and latest session-check
+  status are stored locally in the user's Chrome extension storage.
 - Data is not sold, used for advertising, or shared with unrelated third
   parties.
 - The extension does not perform analytics or background browsing collection.

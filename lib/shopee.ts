@@ -6,6 +6,15 @@ const SHOPEE_AFFILIATE_ORIGIN = 'https://affiliate.shopee.vn';
 const SHOPEE_COOKIE_CONFIG_KEY =
   process.env.SHOPEE_COOKIE_CONFIG_KEY?.trim() || 'shoppeCookie';
 const DEFAULT_TIMEOUT_MS = 15_000;
+const SESSION_CHECK_PATH =
+  '/api/v3/offer/product/list?page_offset=0&page_limit=1&client_type=1';
+
+export type ShopeeSessionStatus = 'valid' | 'expired' | 'unknown';
+
+export type ShopeeSessionCheck = {
+  status: ShopeeSessionStatus;
+  message: string;
+};
 
 const CUSTOM_LINK_QUERY = `
   query batchGetCustomLink(
@@ -71,6 +80,78 @@ function requestHeaders(cookie: string, hasBody: boolean) {
   }
 
   return headers;
+}
+
+function looksLikeAuthenticationFailure(value: string) {
+  return /(?:auth|cookie|credential|login|log in|session|token).{0,40}(?:expired|invalid|missing|required)|(?:expired|invalid).{0,40}(?:auth|cookie|credential|login|session|token)/i.test(
+    value,
+  );
+}
+
+export async function verifyShopeeAffiliateSession(
+  cookie: string,
+): Promise<ShopeeSessionCheck> {
+  let response: Response;
+  try {
+    response = await fetch(`${SHOPEE_AFFILIATE_ORIGIN}${SESSION_CHECK_PATH}`, {
+      headers: requestHeaders(cookie, false),
+      cache: 'no-store',
+      redirect: 'follow',
+      signal: AbortSignal.timeout(DEFAULT_TIMEOUT_MS),
+    });
+  } catch {
+    return {
+      status: 'unknown',
+      message: 'Could not reach Shopee to verify this session.',
+    };
+  }
+
+  const finalUrl = new URL(response.url);
+  if (
+    finalUrl.origin !== SHOPEE_AFFILIATE_ORIGIN ||
+    /\/(?:login|signin)(?:\/|$)/i.test(finalUrl.pathname)
+  ) {
+    return {
+      status: 'expired',
+      message: 'Shopee redirected this session to sign in again.',
+    };
+  }
+
+  const body = await response.text();
+  if (response.status === 401 || looksLikeAuthenticationFailure(body)) {
+    return {
+      status: 'expired',
+      message: 'Shopee no longer accepts this session. Sign in again.',
+    };
+  }
+
+  if (response.status === 403) {
+    return {
+      status: 'unknown',
+      message:
+        'Shopee returned 403. The session may be blocked or lack permission.',
+    };
+  }
+
+  const contentType = response.headers.get('content-type') ?? '';
+  if (response.ok && contentType.includes('application/json')) {
+    try {
+      const payload = JSON.parse(body) as { code?: unknown };
+      if (payload.code === 0) {
+        return {
+          status: 'valid',
+          message: 'Shopee accepted this session.',
+        };
+      }
+    } catch {
+      // A malformed response cannot prove whether the session is valid.
+    }
+  }
+
+  return {
+    status: 'unknown',
+    message: `Shopee could not confirm this session (HTTP ${response.status}).`,
+  };
 }
 
 export async function fetchShopeeAffiliate(

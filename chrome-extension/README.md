@@ -2,8 +2,14 @@
 
 This Manifest V3 extension reads the cookies that Chrome would send to
 `https://affiliate.shopee.vn/api/` and sends them to this app's protected
-`POST /api/shopee/cookie-sync` route only when **Capture & sync** is clicked.
+`POST /api/shopee/cookie-sync` route only when **Capture & sync** or
+**Check session** is clicked.
 The extension never displays or persists the captured cookie header.
+
+The popup shows the next browser-managed cookie expiry, distinguishes session
+cookies that have no fixed expiry, and stores only the time and outcome of the
+latest server-side session check. **Capture & sync** verifies the session
+automatically; **Check session** verifies without updating Global Config.
 
 ## Install locally
 
@@ -43,7 +49,7 @@ as credentials.
 ## Chrome Web Store release
 
 The upload-ready package is generated at
-`releases/shopee-cookie-sync-v1.0.0.zip`. Follow `STORE_RELEASE.md` for the
+`releases/shopee-cookie-sync-v1.1.0.zip`. Follow `STORE_RELEASE.md` for the
 listing, permissions, privacy disclosures, assets, and review steps. Before
 submission, replace the placeholders in `PRIVACY.md` and publish it at a public
 HTTPS URL.

@@ -13,7 +13,7 @@
 
 body {
   width: 380px;
-  min-height: 510px;
+  min-height: 610px;
   margin: 0;
   background: #ffffff;
 }
@@ -91,6 +91,33 @@ h1 {
 .status-line {
   font-size: 14px;
   line-height: 1.45;
+}
+
+.session-line {
+  display: grid;
+  gap: 2px;
+}
+
+#session-status.valid {
+  color: #12663f;
+}
+
+#session-status.expired {
+  color: #9f271c;
+}
+
+#session-status.unknown {
+  color: #815500;
+}
+
+#last-checked {
+  color: #697386;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+#last-checked[hidden] {
+  display: none;
 }
 
 .status-line {

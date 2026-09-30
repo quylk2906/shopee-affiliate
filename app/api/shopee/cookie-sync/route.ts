@@ -2,6 +2,7 @@ import "server-only";
 
 import { timingSafeEqual } from "node:crypto";
 import { parseConnectionString } from "@vercel/global-config";
+import { verifyShopeeAffiliateSession } from "@/lib/shopee";
 
 export const runtime = "nodejs";
 
@@ -78,6 +79,10 @@ export async function POST(request: Request) {
     typeof body === "object" && body !== null && "cookie" in body
       ? (body as { cookie?: unknown }).cookie
       : undefined;
+  const action =
+    typeof body === "object" && body !== null && "action" in body
+      ? (body as { action?: unknown }).action
+      : "sync";
 
   if (
     typeof cookie !== "string" ||
@@ -87,6 +92,17 @@ export async function POST(request: Request) {
     hasControlCharacters(cookie)
   ) {
     return noStoreJson({ error: "Invalid cookie payload." }, { status: 400 });
+  }
+
+  if (action !== "sync" && action !== "verify") {
+    return noStoreJson({ error: "Invalid action." }, { status: 400 });
+  }
+
+  const session = await verifyShopeeAffiliateSession(cookie);
+  const checkedAt = new Date().toISOString();
+
+  if (action === "verify") {
+    return noStoreJson({ ok: true, session, checkedAt });
   }
 
   const vercelToken = process.env.VERCEL_API_TOKEN?.trim();
@@ -139,5 +155,5 @@ export async function POST(request: Request) {
     );
   }
 
-  return noStoreJson({ ok: true, key: configKey });
+  return noStoreJson({ ok: true, key: configKey, session, checkedAt });
 }
