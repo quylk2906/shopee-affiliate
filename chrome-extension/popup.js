@@ -25,6 +25,13 @@ class UnsupportedSiteError extends Error {
   }
 }
 
+class TikTokComingSoonError extends Error {
+  constructor() {
+    super("TikTok support is coming soon.");
+    this.name = "TikTokComingSoonError";
+  }
+}
+
 function setStatus(message, state = "") {
   statusText.textContent = message;
   statusDot.className = `status-dot ${state}`.trim();
@@ -52,17 +59,25 @@ async function getActiveTab() {
 
 async function ensureSupportedSite() {
   const tab = await getActiveTab();
+  let activeUrl;
 
   try {
-    const activeUrl = new URL(tab?.url ?? "");
-    if (
-      activeUrl.protocol === "https:" &&
-      activeUrl.hostname === SUPPORTED_HOST
-    ) {
-      return;
-    }
+    activeUrl = new URL(tab?.url ?? "");
   } catch {
     // Restricted pages may not expose a URL. Treat them as unsupported.
+  }
+
+  if (
+    activeUrl?.protocol === "https:" &&
+    activeUrl.hostname === SUPPORTED_HOST
+  ) {
+    return;
+  }
+  if (
+    activeUrl?.hostname === "tiktok.com" ||
+    activeUrl?.hostname.endsWith(".tiktok.com")
+  ) {
+    throw new TikTokComingSoonError();
   }
 
   throw new UnsupportedSiteError();
@@ -283,9 +298,14 @@ async function syncCookies() {
     const message =
       error instanceof Error ? error.message : "Could not sync cookies.";
     const unsupported = error instanceof UnsupportedSiteError;
-    canRetry = !unsupported;
-    const type = unsupported ? "warning" : "error";
-    const title = unsupported ? "Unsupported site" : "Sync failed";
+    const tiktokComingSoon = error instanceof TikTokComingSoonError;
+    canRetry = !unsupported && !tiktokComingSoon;
+    const type = unsupported || tiktokComingSoon ? "warning" : "error";
+    const title = tiktokComingSoon
+      ? "TikTok is coming"
+      : unsupported
+        ? "Unsupported site"
+        : "Sync failed";
     setStatus(title, type);
     showResult(type, title, message);
   } finally {
@@ -331,8 +351,13 @@ async function checkSession() {
     const message =
       error instanceof Error ? error.message : "Could not check the session.";
     const unsupported = error instanceof UnsupportedSiteError;
-    const type = unsupported ? "warning" : "error";
-    const title = unsupported ? "Unsupported site" : "Check failed";
+    const tiktokComingSoon = error instanceof TikTokComingSoonError;
+    const type = unsupported || tiktokComingSoon ? "warning" : "error";
+    const title = tiktokComingSoon
+      ? "TikTok is coming"
+      : unsupported
+        ? "Unsupported site"
+        : "Check failed";
     setStatus(title, type);
     showResult(type, title, message);
   } finally {
@@ -388,8 +413,13 @@ async function initialize() {
     const message =
       error instanceof Error ? error.message : "Settings required.";
     const unsupported = error instanceof UnsupportedSiteError;
-    const type = unsupported ? "warning" : "error";
-    const title = unsupported ? "Unsupported site" : "Setup required";
+    const tiktokComingSoon = error instanceof TikTokComingSoonError;
+    const type = unsupported || tiktokComingSoon ? "warning" : "error";
+    const title = tiktokComingSoon
+      ? "TikTok is coming"
+      : unsupported
+        ? "Unsupported site"
+        : "Setup required";
     setStatus(title, type);
     showResult(type, title, message);
   }

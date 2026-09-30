@@ -162,7 +162,7 @@ function readProductInsight(payload: unknown): ProductInsight {
 
 export function CommissionLinkBuilder() {
   const [productUrl, setProductUrl] = useState('');
-  const [result, setResult] = useState<AffiliateResult | null>(mockShopeeData);
+  const [result, setResult] = useState<AffiliateResult | null>(null);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isShared, setIsShared] = useState(false);

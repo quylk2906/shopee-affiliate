@@ -2,7 +2,7 @@
 
 ## Upload package
 
-Upload `releases/shopee-cookie-sync-v1.1.0.zip` in the
+Upload `releases/shopee-cookie-sync-v1.1.1.zip` in the
 [Chrome Developer Dashboard](https://chrome.google.com/webstore/devconsole/)
 using **Add new item → Choose file**. The ZIP contains `manifest.json` at its
 root.
@@ -30,6 +30,7 @@ review the cookie-use disclosure, and choose Capture & sync.
 - Sends cookies only to the Vercel endpoint configured by the user.
 - Never displays or stores captured cookie values in extension storage.
 - Shows clear success, error, and unsupported-site messages.
+- Shows a coming-soon message on TikTok pages without accessing their cookies.
 - Shows browser cookie expiry metadata and checks whether Shopee still accepts
   the session after syncing or when the user clicks Check session.
 

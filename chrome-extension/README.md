@@ -24,7 +24,8 @@ automatically; **Check session** verifies without updating Global Config.
    **Capture & sync**.
 
 If the active tab is not `affiliate.shopee.vn`, the popup displays an
-**Unsupported site** warning and disables cookie capture.
+**Unsupported site** warning and disables cookie capture. TikTok pages display
+**TikTok is coming** instead.
 
 ## Required Vercel environment variables
 
@@ -49,7 +50,7 @@ as credentials.
 ## Chrome Web Store release
 
 The upload-ready package is generated at
-`releases/shopee-cookie-sync-v1.1.0.zip`. Follow `STORE_RELEASE.md` for the
+`releases/shopee-cookie-sync-v1.1.1.zip`. Follow `STORE_RELEASE.md` for the
 listing, permissions, privacy disclosures, assets, and review steps. Before
 submission, replace the placeholders in `PRIVACY.md` and publish it at a public
 HTTPS URL.
