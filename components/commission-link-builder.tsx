@@ -34,7 +34,7 @@ import {
 } from '@/components/icons';
 import { PwaRegistration } from '@/components/pwa-registration';
 import { THEME_STORAGE_KEY, type ThemePreference } from '@/lib/theme';
-import { mockTikTokData } from './mock-data';
+import { mockShopeeData, mockTikTokData } from './mock-data';
 
 type GeneratedLinkResponse = {
   affiliateUrl: string;
@@ -162,7 +162,7 @@ function readProductInsight(payload: unknown): ProductInsight {
 
 export function CommissionLinkBuilder() {
   const [productUrl, setProductUrl] = useState('');
-  const [result, setResult] = useState<AffiliateResult | null>(null);
+  const [result, setResult] = useState<AffiliateResult | null>(mockShopeeData);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isShared, setIsShared] = useState(false);
@@ -511,7 +511,7 @@ export function CommissionLinkBuilder() {
                     isPending={isLoading}
                   >
                     <span>
-                      {isLoading ? 'Đang tạo link...' : 'Tạo link hoa hồng'}
+                      {isLoading ? 'Đang tạo link...' : 'Tạo link commission'}
                     </span>
                     {isLoading ? (
                       <Spinner className="size-5 text-white" size="sm" />

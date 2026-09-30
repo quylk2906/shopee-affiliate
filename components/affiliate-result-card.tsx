@@ -5,7 +5,6 @@ import {
   ShareIcon,
   ShieldIcon,
 } from '@/components/icons';
-import { Link } from '@heroui/react';
 
 export type AffiliateResult = {
   affiliateUrl: string;
@@ -110,7 +109,7 @@ export function AffiliateResultCard({
         </strong>
       </div> */}
 
-      <Link
+      <a
         className={`mt-2 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl px-3 text-center text-base font-bold text-white no-underline shadow-xl transition hover:-translate-y-0.5 hover:opacity-95 focus-visible:outline-none focus-visible:ring-4 motion-reduce:transform-none sm:gap-3 sm:px-5 sm:text-2xl ${
           result.provider === 'shopee'
             ? 'bg-linear-to-r from-orange-600 to-orange-500 shadow-orange-500/20 focus-visible:ring-orange-300'
@@ -123,7 +122,7 @@ export function AffiliateResultCard({
         <OrderBagIcon className="size-7" />
         <span className="whitespace-nowrap">Mua ngay trên {providerName}</span>
         <ArrowIcon className="size-7" />
-      </Link>
+      </a>
 
       <p className="mt-7 mb-3 text-sm text-slate-500 dark:text-slate-400 sm:text-base">
         Hãy chia sẻ cho cộng đồng, nếu có người mua bạn sẽ nhận được hoa hồng:

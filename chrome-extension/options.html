@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopee Cookie Sync settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="settings-shell">
+      <header>
+        <div class="brand-mark" aria-hidden="true">S</div>
+        <div>
+          <h1>Shopee Cookie Sync</h1>
+          <p>Connect this extension to your own deployed app.</p>
+        </div>
+      </header>
+
+      <form id="settings-form">
+        <label for="endpoint-url">Sync endpoint</label>
+        <input
+          id="endpoint-url"
+          name="endpointUrl"
+          type="url"
+          placeholder="https://your-app.vercel.app/api/shopee/cookie-sync"
+          autocomplete="url"
+          required
+        />
+        <p class="field-help">
+          Use HTTPS in production. Local development may use localhost.
+        </p>
+
+        <label for="sync-secret">Sync secret</label>
+        <input
+          id="sync-secret"
+          name="syncSecret"
+          type="password"
+          placeholder="Same value as COOKIE_SYNC_SECRET"
+          autocomplete="new-password"
+          minlength="16"
+          required
+        />
+        <p class="field-help">
+          Stored only in this Chrome profile using extension local storage.
+        </p>
+
+        <button type="submit">Save connection</button>
+        <p id="save-status" class="save-status" aria-live="polite"></p>
+      </form>
+
+      <aside>
+        <strong>Server-side Vercel settings</strong>
+        <p>
+          Add <code>VERCEL_API_TOKEN</code>,
+          <code>VERCEL_GLOBAL_CONFIG_ID</code>, and
+          <code>COOKIE_SYNC_SECRET</code> to your Vercel project. The extension
+          never receives your Vercel access token.
+        </p>
+      </aside>
+    </main>
+    <script src="options.js"></script>
+  </body>
+</html>

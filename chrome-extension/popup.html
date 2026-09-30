@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopee Cookie Sync</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup-shell">
+      <header class="brand-row">
+        <div class="brand-mark" aria-hidden="true">S</div>
+        <div>
+          <h1>Shopee Cookie Sync</h1>
+        </div>
+      </header>
+
+      <section class="details" aria-label="Sync details">
+        <div class="detail-row">
+          <span class="detail-label">Source</span>
+          <strong>affiliate.shopee.vn</strong>
+        </div>
+        <div class="detail-row">
+          <span class="detail-label">Status</span>
+          <span class="status-line">
+            <span id="status-dot" class="status-dot" aria-hidden="true"></span>
+            <strong id="status-text" aria-live="polite">Checking settings…</strong>
+          </span>
+        </div>
+      </section>
+
+      <section class="disclosure-note" aria-label="Cookie use disclosure">
+        <strong>Before you sync</strong>
+        <p>
+          Clicking Capture &amp; sync reads your Shopee authentication cookies
+          and sends them to the Vercel endpoint you configured. They are used
+          only for Shopee Affiliate API requests.
+        </p>
+      </section>
+
+      <button id="sync-button" class="primary-button" type="button" disabled>
+        Capture &amp; sync
+      </button>
+      <button id="settings-button" class="secondary-button" type="button">
+        Settings
+      </button>
+
+      <div
+        id="result-message"
+        class="result-message"
+        role="status"
+        aria-live="polite"
+        hidden
+      >
+        <span id="result-icon" class="result-icon" aria-hidden="true"></span>
+        <div>
+          <strong id="result-title"></strong>
+          <p id="result-detail"></p>
+        </div>
+      </div>
+
+      <div id="last-sync" class="last-sync" hidden>
+        <span class="success-icon" aria-hidden="true">✓</span>
+        <div>
+          <strong>Last synced</strong>
+          <span id="last-sync-time"></span>
+        </div>
+      </div>
+    </main>
+    <script src="preview-mock.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

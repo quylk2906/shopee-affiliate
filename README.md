@@ -34,3 +34,16 @@ Các Route Handler luôn đọc khóa `shoppeCookie` từ Global Config và gử
 server, tắt cache, giới hạn thời gian request và không trả cookie về client. Đây
 là API nội bộ có thể đọc dữ liệu tài khoản; không triển khai công khai khi chưa
 thêm xác thực cho ứng dụng.
+
+## Chrome extension cập nhật cookie
+
+Thư mục [`chrome-extension`](./chrome-extension) chứa extension Manifest V3 để
+lấy cookie của `affiliate.shopee.vn` theo thao tác chủ động của người dùng và gửi
+đến `POST /api/shopee/cookie-sync`. Route này xác thực bằng
+`COOKIE_SYNC_SECRET`, sau đó dùng `VERCEL_API_TOKEN` ở phía server để cập nhật
+Global Config; token Vercel không được đưa vào extension.
+
+Xem [`chrome-extension/README.md`](./chrome-extension/README.md) để cài extension
+và cấu hình các biến `COOKIE_SYNC_SECRET`, `VERCEL_API_TOKEN`,
+`VERCEL_GLOBAL_CONFIG_ID` cùng `SHOPEE_COOKIE_CONFIG_KEY` (mặc định
+`shoppeCookie`).

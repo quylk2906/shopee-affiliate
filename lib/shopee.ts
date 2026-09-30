@@ -3,7 +3,8 @@ import 'server-only';
 import { get } from '@vercel/global-config';
 
 const SHOPEE_AFFILIATE_ORIGIN = 'https://affiliate.shopee.vn';
-const SHOPEE_COOKIE_CONFIG_KEY = 'shoppeCookie';
+const SHOPEE_COOKIE_CONFIG_KEY =
+  process.env.SHOPEE_COOKIE_CONFIG_KEY?.trim() || 'shoppeCookie';
 const DEFAULT_TIMEOUT_MS = 15_000;
 
 const CUSTOM_LINK_QUERY = `
