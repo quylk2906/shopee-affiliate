@@ -1,6 +1,6 @@
-export type AffiliateProvider = "shopee" | "tiktok";
+export type AffiliateProvider = 'shopee' | 'tiktok';
 
-const SHOPEE_HOSTS = new Set(["shopee.vn", "shp.ee", "shope.ee"]);
+const SHOPEE_HOSTS = new Set(['shopee.vn', 'shp.ee', 'shope.ee']);
 
 function matchesHost(host: string, supportedHosts: Set<string>) {
   for (const supportedHost of supportedHosts) {
@@ -13,8 +13,8 @@ function matchesHost(host: string, supportedHosts: Set<string>) {
 export function detectProvider(productUrl: string): AffiliateProvider | null {
   try {
     const host = new URL(productUrl).hostname.toLowerCase();
-    if (matchesHost(host, SHOPEE_HOSTS)) return "shopee";
-    if (host === "tiktok.com" || host.endsWith(".tiktok.com")) return "tiktok";
+    if (matchesHost(host, SHOPEE_HOSTS)) return 'shopee';
+    if (host === 'tiktok.com' || host.endsWith('.tiktok.com')) return 'tiktok';
     return null;
   } catch {
     return null;
@@ -23,4 +23,10 @@ export function detectProvider(productUrl: string): AffiliateProvider | null {
 
 export function isSupportedAffiliateUrl(productUrl: string) {
   return detectProvider(productUrl) !== null;
+}
+
+export function normalizeAffiliateUrl(productUrl = '') {
+  const trimmedUrl = productUrl.trim();
+
+  return trimmedUrl.replace('vn.', '');
 }

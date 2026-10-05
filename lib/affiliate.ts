@@ -1,7 +1,7 @@
-import type { AffiliateProvider } from "@/lib/affiliate-url";
-import { createShopeeCustomLinks } from "@/lib/shopee";
+import type { AffiliateProvider } from '@/lib/affiliate-url';
+import { createShopeeCustomLinks } from '@/lib/shopee';
 
-export { detectProvider } from "@/lib/affiliate-url";
+export { detectProvider } from '@/lib/affiliate-url';
 
 type ProviderConfig = {
   endpoint?: string;
@@ -10,7 +10,7 @@ type ProviderConfig = {
 };
 
 function getProviderConfig(provider: AffiliateProvider): ProviderConfig {
-  if (provider === "shopee") {
+  if (provider === 'shopee') {
     return {
       endpoint: process.env.SHOPEE_AFFILIATE_API_URL,
       clientId: process.env.SHOPEE_AFFILIATE_APP_ID,
@@ -25,10 +25,10 @@ function getProviderConfig(provider: AffiliateProvider): ProviderConfig {
 }
 
 function readAffiliateUrl(payload: unknown): string | null {
-  if (!payload || typeof payload !== "object") return null;
+  if (!payload || typeof payload !== 'object') return null;
   const data = payload as Record<string, unknown>;
   const nested =
-    data.data && typeof data.data === "object"
+    data.data && typeof data.data === 'object'
       ? (data.data as Record<string, unknown>)
       : null;
   const candidate =
@@ -44,7 +44,7 @@ function readAffiliateUrl(payload: unknown): string | null {
       ? (nested.batchCustomLink[0] as Record<string, unknown> | undefined)
           ?.shortLink
       : undefined);
-  return typeof candidate === "string" && candidate.startsWith("http")
+  return typeof candidate === 'string' && candidate.startsWith('http')
     ? candidate
     : null;
 }
@@ -53,38 +53,38 @@ export async function createAffiliateLink(
   provider: AffiliateProvider,
   productUrl: string,
 ) {
-  if (process.env.AFFILIATE_API_MOCK === "true") {
-    const encoded = Buffer.from(productUrl).toString("base64url").slice(0, 14);
+  if (process.env.AFFILIATE_API_MOCK === 'true') {
+    const encoded = Buffer.from(productUrl).toString('base64url').slice(0, 14);
     return `https://affiliate.local/${provider}/${encoded}`;
   }
 
-  if (provider === "shopee") {
+  if (provider === 'shopee') {
     const response = await createShopeeCustomLinks([productUrl]);
-    if (!response.ok) throw new Error("PROVIDER_REQUEST_FAILED");
+    if (!response.ok) throw new Error('PROVIDER_REQUEST_FAILED');
     const affiliateUrl = readAffiliateUrl(await response.json());
-    if (!affiliateUrl) throw new Error("PROVIDER_RESPONSE_INVALID");
+    if (!affiliateUrl) throw new Error('PROVIDER_RESPONSE_INVALID');
     return affiliateUrl;
   }
 
   const config = getProviderConfig(provider);
   if (!config.endpoint || !config.clientId || !config.secret) {
-    throw new Error("API_CONFIG_MISSING");
+    throw new Error('API_CONFIG_MISSING');
   }
 
   const response = await fetch(config.endpoint, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
-      "X-Affiliate-Client-Id": config.clientId,
-      "X-Affiliate-Secret": config.secret,
+      'Content-Type': 'application/json',
+      'X-Affiliate-Client-Id': config.clientId,
+      'X-Affiliate-Secret': config.secret,
     },
     body: JSON.stringify({ productUrl, provider }),
-    cache: "no-store",
+    cache: 'no-store',
     signal: AbortSignal.timeout(12_000),
   });
 
-  if (!response.ok) throw new Error("PROVIDER_REQUEST_FAILED");
+  if (!response.ok) throw new Error('PROVIDER_REQUEST_FAILED');
   const affiliateUrl = readAffiliateUrl(await response.json());
-  if (!affiliateUrl) throw new Error("PROVIDER_RESPONSE_INVALID");
+  if (!affiliateUrl) throw new Error('PROVIDER_RESPONSE_INVALID');
   return affiliateUrl;
 }

@@ -33,7 +33,10 @@ import {
   WifiIcon,
 } from '@/components/icons';
 import { PwaRegistration } from '@/components/pwa-registration';
-import { isSupportedAffiliateUrl } from '@/lib/affiliate-url';
+import {
+  isSupportedAffiliateUrl,
+  normalizeAffiliateUrl,
+} from '@/lib/affiliate-url';
 import { THEME_STORAGE_KEY, type ThemePreference } from '@/lib/theme';
 import { mockShopeeData, mockTikTokData } from './mock-data';
 
@@ -203,11 +206,12 @@ export function CommissionLinkBuilder() {
     setError('');
     setResult(null);
     setIsShared(false);
-    const normalizedUrl = productUrl.trim();
+    const normalizedUrl = normalizeAffiliateUrl(productUrl);
     if (!isSupportedAffiliateUrl(normalizedUrl)) {
       setError('Vui lòng nhập link sản phẩm Shopee hoặc TikTok Shop hợp lệ.');
       return;
     }
+    setProductUrl(normalizedUrl);
 
     setIsLoading(true);
     try {
