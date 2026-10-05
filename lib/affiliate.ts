@@ -1,6 +1,7 @@
+import type { AffiliateProvider } from "@/lib/affiliate-url";
 import { createShopeeCustomLinks } from "@/lib/shopee";
 
-export type AffiliateProvider = "shopee" | "tiktok";
+export { detectProvider } from "@/lib/affiliate-url";
 
 type ProviderConfig = {
   endpoint?: string;
@@ -21,17 +22,6 @@ function getProviderConfig(provider: AffiliateProvider): ProviderConfig {
     clientId: process.env.TIKTOK_AFFILIATE_APP_KEY,
     secret: process.env.TIKTOK_AFFILIATE_SECRET,
   };
-}
-
-export function detectProvider(productUrl: string): AffiliateProvider | null {
-  try {
-    const host = new URL(productUrl).hostname.toLowerCase();
-    if (host === "shopee.vn" || host.endsWith(".shopee.vn")) return "shopee";
-    if (host === "tiktok.com" || host.endsWith(".tiktok.com")) return "tiktok";
-    return null;
-  } catch {
-    return null;
-  }
 }
 
 function readAffiliateUrl(payload: unknown): string | null {

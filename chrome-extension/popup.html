@@ -51,6 +51,31 @@
         </p>
       </section>
 
+      <section id="manual-cookie-section" class="manual-cookie" hidden>
+        <label for="manual-cookie-input">Paste cookie manually</label>
+        <textarea
+          id="manual-cookie-input"
+          rows="5"
+          maxlength="30000"
+          placeholder="SPC_...=...; csrftoken=..."
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+        ></textarea>
+        <p>
+          Paste the complete Cookie request-header value from DevTools. It is
+          submitted directly and is not saved by the extension.
+        </p>
+        <button
+          id="manual-sync-button"
+          class="primary-button"
+          type="button"
+          disabled
+        >
+          Check &amp; sync manually
+        </button>
+      </section>
+
       <button id="sync-button" class="primary-button" type="button" disabled>
         Capture &amp; sync
       </button>

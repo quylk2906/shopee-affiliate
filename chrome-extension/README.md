@@ -10,6 +10,9 @@ The popup shows the next browser-managed cookie expiry, distinguishes session
 cookies that have no fixed expiry, and stores only the time and outcome of the
 latest server-side session check. **Capture & sync** verifies the session
 automatically; **Check session** verifies without updating Global Config.
+If Chrome cannot read any Shopee cookies, the popup provides a manual field for
+the complete Cookie request-header value. **Check & sync manually** submits and
+verifies that value without saving it in extension storage.
 
 ## Install locally
 
@@ -50,7 +53,7 @@ as credentials.
 ## Chrome Web Store release
 
 The upload-ready package is generated at
-`releases/shopee-cookie-sync-v1.1.1.zip`. Follow `STORE_RELEASE.md` for the
+`releases/shopee-cookie-sync-v1.2.0.zip`. Follow `STORE_RELEASE.md` for the
 listing, permissions, privacy disclosures, assets, and review steps. Before
 submission, replace the placeholders in `PRIVACY.md` and publish it at a public
 HTTPS URL.

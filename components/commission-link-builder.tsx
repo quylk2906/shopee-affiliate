@@ -33,6 +33,7 @@ import {
   WifiIcon,
 } from '@/components/icons';
 import { PwaRegistration } from '@/components/pwa-registration';
+import { isSupportedAffiliateUrl } from '@/lib/affiliate-url';
 import { THEME_STORAGE_KEY, type ThemePreference } from '@/lib/theme';
 import { mockShopeeData, mockTikTokData } from './mock-data';
 
@@ -52,20 +53,6 @@ const benefits = [
   { label: 'Không cần cài app', Icon: BoltIcon },
   { label: 'Miễn phí 100%', Icon: GiftIcon },
 ];
-
-function isSupportedUrl(value: string) {
-  try {
-    const host = new URL(value).hostname.toLowerCase();
-    return (
-      host === 'shopee.vn' ||
-      host.endsWith('.shopee.vn') ||
-      host === 'tiktok.com' ||
-      host.endsWith('.tiktok.com')
-    );
-  } catch {
-    return false;
-  }
-}
 
 function productTitleFromUrl(value: string) {
   try {
@@ -217,7 +204,7 @@ export function CommissionLinkBuilder() {
     setResult(null);
     setIsShared(false);
     const normalizedUrl = productUrl.trim();
-    if (!isSupportedUrl(normalizedUrl)) {
+    if (!isSupportedAffiliateUrl(normalizedUrl)) {
       setError('Vui lòng nhập link sản phẩm Shopee hoặc TikTok Shop hợp lệ.');
       return;
     }

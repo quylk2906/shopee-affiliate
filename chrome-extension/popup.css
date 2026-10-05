@@ -171,6 +171,60 @@ h1 {
   line-height: 1.45;
 }
 
+.manual-cookie {
+  margin: 0 0 16px;
+  padding: 14px;
+  border: 1px solid #f2d394;
+  border-radius: 11px;
+  background: #fff9e8;
+}
+
+.manual-cookie[hidden] {
+  display: none;
+}
+
+.manual-cookie label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.manual-cookie textarea {
+  width: 100%;
+  min-height: 104px;
+  resize: vertical;
+  border: 1px solid #cdd4df;
+  border-radius: 9px;
+  padding: 10px;
+  color: #111c33;
+  background: #ffffff;
+  font:
+    11px / 1.45 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    monospace;
+}
+
+.manual-cookie textarea:focus {
+  border-color: #ee4d2d;
+  outline: 3px solid rgb(238 77 45 / 16%);
+}
+
+.manual-cookie p {
+  margin: 7px 0 11px;
+  color: #52606d;
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.manual-cookie .primary-button {
+  min-height: 42px;
+  box-shadow: none;
+}
+
 .primary-button,
 .secondary-button {
   width: 100%;

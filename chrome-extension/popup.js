@@ -4,6 +4,9 @@ const statusDot = document.querySelector("#status-dot");
 const statusText = document.querySelector("#status-text");
 const syncButton = document.querySelector("#sync-button");
 const checkButton = document.querySelector("#check-button");
+const manualCookieSection = document.querySelector("#manual-cookie-section");
+const manualCookieInput = document.querySelector("#manual-cookie-input");
+const manualSyncButton = document.querySelector("#manual-sync-button");
 const settingsButton = document.querySelector("#settings-button");
 const resultMessage = document.querySelector("#result-message");
 const resultIcon = document.querySelector("#result-icon");
@@ -29,6 +32,13 @@ class TikTokComingSoonError extends Error {
   constructor() {
     super("TikTok support is coming soon.");
     this.name = "TikTokComingSoonError";
+  }
+}
+
+class NoCookiesError extends Error {
+  constructor() {
+    super("No Shopee cookies found. Sign in, then try again.");
+    this.name = "NoCookiesError";
   }
 }
 
@@ -168,13 +178,45 @@ async function captureCookies() {
   const cookies = await chrome.cookies.getAll(details);
 
   if (cookies.length === 0) {
-    throw new Error("No Shopee cookies found. Sign in, then try again.");
+    throw new NoCookiesError();
   }
 
   return {
     count: cookies.length,
     header: cookies.map(({ name, value }) => `${name}=${value}`).join("; "),
     cookies,
+  };
+}
+
+function showManualCookieEntry() {
+  manualCookieSection.hidden = false;
+  manualSyncButton.disabled = false;
+}
+
+function hasControlCharacters(value) {
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    if (code <= 31 || code === 127) return true;
+  }
+  return false;
+}
+
+function manualCookieHeader() {
+  const header = manualCookieInput.value.trim().replace(/^cookie\s*:\s*/i, "");
+
+  if (!header) {
+    throw new Error("Paste the Cookie request-header value first.");
+  }
+  if (header.length > 30_000) {
+    throw new Error("The pasted cookie is too large.");
+  }
+  if (!header.includes("=") || hasControlCharacters(header)) {
+    throw new Error("The pasted cookie header is invalid.");
+  }
+
+  return {
+    count: header.split(";").filter((entry) => entry.trim()).length,
+    header,
   };
 }
 
@@ -206,9 +248,67 @@ async function loadBrowserExpiry() {
     showBrowserExpiry(captured.cookies);
     return captured;
   } catch (error) {
+    if (error instanceof NoCookiesError) showManualCookieEntry();
     browserExpiry.textContent =
       error instanceof Error ? error.message : "No Shopee cookies found.";
     return null;
+  }
+}
+
+async function syncManualCookie() {
+  manualSyncButton.disabled = true;
+  syncButton.disabled = true;
+  checkButton.disabled = true;
+  hideResult();
+  setStatus("Checking pasted cookie…", "working");
+
+  try {
+    await ensureSupportedSite();
+    const settings = await chrome.storage.local.get([
+      "endpointUrl",
+      "syncSecret",
+    ]);
+    const endpoint = validateSettings(settings);
+    await ensureEndpointPermission(endpoint);
+    const captured = manualCookieHeader();
+    const result = await postCookie(
+      endpoint,
+      settings.syncSecret,
+      captured,
+      "sync",
+    );
+    const session = await saveAndShowSessionCheck(result);
+    const syncedAt = new Date().toISOString();
+    await chrome.storage.local.set({ lastSyncedAt: syncedAt });
+    showLastSync(syncedAt);
+
+    if (session.status === "valid") {
+      manualCookieInput.value = "";
+      setStatus("Manual cookie synced and verified", "success");
+      showResult(
+        "success",
+        "Manual sync successful",
+        `Updated ${result.key ?? "Global Config"} with ${captured.count} cookie entries.`,
+      );
+    } else {
+      setStatus("Manual cookie synced; check session", "warning");
+      showResult(
+        "warning",
+        session.status === "expired"
+          ? "Synced, but session expired"
+          : "Synced; verification unavailable",
+        session.message,
+      );
+    }
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Could not sync the cookie.";
+    setStatus("Manual sync failed", "error");
+    showResult("error", "Manual sync failed", message);
+  } finally {
+    manualSyncButton.disabled = false;
+    syncButton.disabled = true;
+    checkButton.disabled = true;
   }
 }
 
@@ -398,6 +498,7 @@ async function initialize() {
     validateSettings(settings);
     const captured = await loadBrowserExpiry();
     if (!captured) {
+      showManualCookieEntry();
       setStatus("Sign in required", "warning");
       showResult(
         "warning",
@@ -427,6 +528,7 @@ async function initialize() {
 
 syncButton.addEventListener("click", syncCookies);
 checkButton.addEventListener("click", checkSession);
+manualSyncButton.addEventListener("click", syncManualCookie);
 settingsButton.addEventListener("click", () =>
   chrome.runtime.openOptionsPage(),
 );

@@ -28,6 +28,8 @@ own application can make Shopee Affiliate API requests.
 - Cookie metadata is read when the popup opens to show browser-managed expiry.
 - Cookie values are accessed only after the user clicks **Capture & sync** or
   **Check session**.
+- A manually pasted Cookie header is sent only after the user clicks
+  **Check & sync manually** and is never saved in extension storage.
 - Cookie values are not displayed or saved in extension storage.
 - Cookies are sent only to the endpoint configured by the user and are used
   only to update the configured Global Config value.
