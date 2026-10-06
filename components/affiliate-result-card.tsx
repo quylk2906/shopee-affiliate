@@ -1,6 +1,7 @@
 import {
   ArrowIcon,
   CheckIcon,
+  CopyIcon,
   OrderBagIcon,
   ShareIcon,
   ShieldIcon,
@@ -17,7 +18,9 @@ export type AffiliateResult = {
 
 type AffiliateResultCardProps = {
   result: AffiliateResult;
+  isCopied: boolean;
   isShared: boolean;
+  onCopy: () => void;
   onShare: () => void;
 };
 
@@ -60,7 +63,9 @@ function formatRate(value?: number) {
 
 export function AffiliateResultCard({
   result,
+  isCopied,
   isShared,
+  onCopy,
   onShare,
 }: AffiliateResultCardProps) {
   const providerName = result.provider === 'shopee' ? 'Shopee' : 'TikTok Shop';
@@ -84,6 +89,26 @@ export function AffiliateResultCard({
       <p className="mt-7 mb-0 text-sm text-slate-600 leading-relaxed dark:text-slate-300 sm:text-xl">
         {result.productTitle}
       </p>
+
+      <div className="mt-5 flex min-w-0 items-center gap-2 rounded-2xl border border-emerald-200 bg-white/80 p-2 shadow-sm dark:border-emerald-400/25 dark:bg-slate-950/40">
+        <span className="min-w-0 flex-1 truncate px-2 text-sm text-slate-600 dark:text-slate-300 sm:text-base">
+          {result.affiliateUrl}
+        </span>
+        <button
+          className="grid size-10 min-w-10 shrink-0 cursor-pointer place-items-center rounded-full border-0 bg-transparent p-0 text-slate-500 shadow-none transition-colors hover:bg-primary/5 hover:text-primary focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-primary/10 active:bg-primary/10 dark:bg-transparent dark:text-slate-400 dark:hover:bg-primary-dark/20 dark:hover:text-primary-dark dark:focus-visible:ring-primary-dark/30 motion-reduce:transition-none"
+          type="button"
+          onClick={onCopy}
+          aria-label={
+            isCopied ? 'Đã sao chép link rút gọn' : 'Sao chép link rút gọn'
+          }
+        >
+          {isCopied ? (
+            <CheckIcon className="size-5" />
+          ) : (
+            <CopyIcon className="size-5" />
+          )}
+        </button>
+      </div>
 
       {/* <div className="mt-7 flex items-center justify-between gap-5 px-1 sm:mt-9 sm:px-7">
         <div className="flex items-center gap-3 text-base text-slate-600 dark:text-slate-300 sm:text-xl">
@@ -110,7 +135,7 @@ export function AffiliateResultCard({
       </div> */}
 
       <a
-        className={`mt-2 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl px-3 text-center text-base font-bold text-white no-underline shadow-xl transition hover:-translate-y-0.5 hover:opacity-95 focus-visible:outline-none focus-visible:ring-4 motion-reduce:transform-none sm:gap-3 sm:px-5 sm:text-2xl ${
+        className={`mt-5 flex min-h-14 w-full items-center justify-center gap-2 rounded-2xl px-3 text-center text-base font-bold text-white no-underline shadow-xl transition hover:-translate-y-0.5 hover:opacity-95 focus-visible:outline-none focus-visible:ring-4 motion-reduce:transform-none sm:gap-3 sm:px-5 sm:text-2xl ${
           result.provider === 'shopee'
             ? 'bg-linear-to-r from-orange-600 to-orange-500 shadow-orange-500/20 focus-visible:ring-orange-300'
             : 'bg-slate-950 shadow-slate-950/20 focus-visible:ring-slate-400 dark:bg-[#fe2c55] dark:text-white dark:shadow-[#fe2c55]/20 dark:focus-visible:ring-[#fe2c55]/40'

@@ -156,6 +156,7 @@ export function CommissionLinkBuilder() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isShared, setIsShared] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -199,6 +200,7 @@ export function CommissionLinkBuilder() {
     setError('');
     setResult(null);
     setIsShared(false);
+    setIsCopied(false);
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -206,6 +208,7 @@ export function CommissionLinkBuilder() {
     setError('');
     setResult(null);
     setIsShared(false);
+    setIsCopied(false);
     const normalizedUrl = normalizeAffiliateUrl(productUrl);
     if (!isSupportedAffiliateUrl(normalizedUrl)) {
       setError('Vui lòng nhập link sản phẩm Shopee hoặc TikTok Shop hợp lệ.');
@@ -296,6 +299,20 @@ export function CommissionLinkBuilder() {
           'Không thể chia sẻ tự động. Hãy mở link và sao chép thủ công.',
         );
       }
+    }
+  }
+
+  async function copyResult() {
+    if (!result) return;
+    setError('');
+
+    try {
+      await navigator.clipboard.writeText(result.affiliateUrl);
+      setIsCopied(true);
+    } catch {
+      setError(
+        'Không thể sao chép link tự động. Hãy chọn link và sao chép thủ công.',
+      );
     }
   }
 
@@ -545,7 +562,9 @@ export function CommissionLinkBuilder() {
         {result ? (
           <AffiliateResultCard
             result={result}
+            isCopied={isCopied}
             isShared={isShared}
+            onCopy={copyResult}
             onShare={shareResult}
           />
         ) : null}
