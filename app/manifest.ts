@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: 'Shopee & TikTok',
     short_name: 'Affiliate',
     description: 'Tạo link hoa hồng Shopee và TikTok Shop.',
-    start_url: '/',
+    start_url: '/affiliate',
     scope: '/',
     display: 'standalone',
     background_color: '#f0eee9',

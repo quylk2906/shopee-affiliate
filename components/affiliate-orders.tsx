@@ -434,7 +434,7 @@ export function AffiliateOrders() {
           </nav>
           <Link
             className="shrink-0 rounded-xl px-3 py-2 font-semibold text-primary no-underline transition-colors hover:bg-primary/5 dark:text-emerald-300 dark:hover:bg-emerald-300/10"
-            href="/"
+            href="/affiliate"
           >
             Tạo link
           </Link>
